@@ -1,0 +1,324 @@
+/* ==========================================================================
+   Proposal Confirmation Page
+   ========================================================================== */
+
+.confirm-page {
+  padding: var(--spacing-2xl) 40px var(--spacing-3xl);
+  max-width: 1000px;
+  margin: 0 auto;
+}
+
+/* Summary Card */
+.confirm-summary {
+  background: var(--bg-card);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  margin-bottom: var(--spacing-xl);
+}
+
+.confirm-summary-gradient {
+  height: 3px;
+  background: var(--gradient-full);
+}
+
+.confirm-summary-body {
+  padding: var(--spacing-xl) var(--spacing-xl);
+}
+
+.confirm-summary-top {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  margin-bottom: var(--spacing-lg);
+}
+
+.confirm-summary-title {
+  font-family: var(--font-heading);
+  font-size: 28px;
+  font-weight: 700;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: var(--text-primary);
+}
+
+.confirm-summary-subtitle {
+  font-size: 14px;
+  color: var(--text-secondary);
+  margin-top: 4px;
+}
+
+.confirm-total {
+  text-align: right;
+}
+
+.confirm-total-label {
+  font-family: var(--font-heading);
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  margin-bottom: 4px;
+}
+
+.confirm-total-value {
+  font-family: var(--font-heading);
+  font-size: 36px;
+  font-weight: 700;
+  color: var(--accent);
+  letter-spacing: -1px;
+}
+
+.confirm-total-approved {
+  font-size: 13px;
+  color: var(--success);
+  margin-top: 4px;
+}
+
+.confirm-meta {
+  display: flex;
+  gap: var(--spacing-xl);
+  padding-top: var(--spacing-lg);
+  border-top: 1px solid var(--border-subtle);
+}
+
+.confirm-meta-item {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.confirm-meta-label {
+  font-family: var(--font-heading);
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+.confirm-meta-value {
+  font-size: 15px;
+  color: var(--text-primary);
+  font-weight: 500;
+}
+
+/* Breakdown Table */
+.confirm-table-wrap {
+  background: var(--bg-card);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  margin-bottom: var(--spacing-xl);
+}
+
+.confirm-table-header {
+  padding: var(--spacing-lg) var(--spacing-xl);
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+.confirm-table-header h3 {
+  font-family: var(--font-heading);
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--text-secondary);
+}
+
+.confirm-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.confirm-table thead th {
+  font-family: var(--font-heading);
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  text-align: left;
+  padding: 12px 16px;
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+.confirm-table thead th:last-child,
+.confirm-table tbody td:last-child {
+  text-align: center;
+}
+
+.confirm-table thead th:nth-child(n+3),
+.confirm-table tbody td:nth-child(n+3) {
+  text-align: right;
+}
+
+.confirm-table tbody td {
+  padding: 14px 16px;
+  font-size: 14px;
+  color: var(--text-primary);
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+.confirm-table tbody tr:last-child td {
+  border-bottom: none;
+}
+
+.confirm-table tbody tr.declined td {
+  opacity: 0.4;
+}
+
+.confirm-table tbody tr.declined .td-cost {
+  text-decoration: line-through;
+}
+
+.confirm-table .td-scene-name {
+  font-weight: 500;
+}
+
+.confirm-table .td-cost {
+  font-family: var(--font-heading);
+  font-weight: 600;
+}
+
+.confirm-table .td-opps {
+  max-width: 220px;
+  line-height: 1.8;
+}
+
+/* Totals row */
+.confirm-table tfoot td {
+  padding: 16px;
+  font-family: var(--font-heading);
+  font-weight: 600;
+  font-size: 14px;
+  border-top: 2px solid var(--border-strong);
+}
+
+.confirm-table tfoot .total-label {
+  font-size: 12px;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: var(--text-secondary);
+}
+
+.confirm-table tfoot .total-value {
+  text-align: right;
+  font-size: 18px;
+  color: var(--accent);
+}
+
+/* Breakdown summary below table */
+.confirm-breakdown {
+  padding: var(--spacing-lg) var(--spacing-xl);
+  border-top: 1px solid var(--border-subtle);
+  display: flex;
+  justify-content: flex-end;
+  gap: var(--spacing-2xl);
+}
+
+.confirm-breakdown-item {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 4px;
+}
+
+.confirm-breakdown-label {
+  font-family: var(--font-heading);
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+.confirm-breakdown-value {
+  font-family: var(--font-heading);
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.confirm-breakdown-value.success { color: var(--success); }
+.confirm-breakdown-value.error { color: var(--error); }
+.confirm-breakdown-value.accent { color: var(--accent); }
+
+/* Actions */
+.confirm-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: var(--spacing-md);
+  margin-bottom: var(--spacing-xl);
+}
+
+/* Footer note */
+.confirm-footer {
+  text-align: center;
+  font-size: 12px;
+  color: var(--text-muted);
+  padding-top: var(--spacing-xl);
+  border-top: 1px solid var(--border-subtle);
+}
+
+/* Email modal */
+.email-modal-content {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-md);
+}
+
+.email-modal-content h3 {
+  font-family: var(--font-heading);
+  font-size: 18px;
+  font-weight: 600;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: var(--text-primary);
+}
+
+.email-modal-actions {
+  display: flex;
+  gap: var(--spacing-sm);
+  justify-content: flex-end;
+  margin-top: var(--spacing-sm);
+}
+
+/* Print styles */
+@media print {
+  .confirm-actions,
+  .confirm-footer,
+  .no-print {
+    display: none !important;
+  }
+
+  .confirm-page {
+    padding: 0;
+    max-width: 100%;
+  }
+
+  .confirm-summary,
+  .confirm-table-wrap {
+    border: 1px solid #ccc;
+  }
+
+  body {
+    background: white;
+    color: black;
+  }
+
+  .confirm-summary-title,
+  .confirm-table tbody td,
+  .confirm-meta-value {
+    color: black;
+  }
+
+  .confirm-total-value {
+    color: #9375C0;
+  }
+
+  .confirm-table thead th {
+    color: #666;
+  }
+}

@@ -1,0 +1,269 @@
+/* ==========================================================================
+   Upload Scripts Page
+   ========================================================================== */
+
+.upload-page {
+  min-height: calc(100vh - 74px);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: var(--spacing-2xl) var(--spacing-xl);
+}
+
+.upload-header {
+  text-align: center;
+  margin-bottom: var(--spacing-2xl);
+}
+
+.upload-header h1 {
+  font-family: var(--font-heading);
+  font-size: 32px;
+  font-weight: 700;
+  letter-spacing: 4px;
+  text-transform: uppercase;
+  color: var(--text-primary);
+  margin-bottom: var(--spacing-sm);
+}
+
+.upload-header p {
+  font-family: var(--font-body);
+  font-size: 16px;
+  color: var(--text-secondary);
+}
+
+.upload-zones {
+  display: flex;
+  flex-direction: row;
+  gap: var(--spacing-lg);
+  width: 100%;
+  max-width: 900px;
+}
+
+.upload-zone {
+  background: var(--bg-card);
+  border: 2px dashed var(--border-default);
+  border-radius: var(--radius-md);
+  padding: var(--spacing-2xl) var(--spacing-xl);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--spacing-md);
+  cursor: pointer;
+  transition: all 0.3s ease;
+  position: relative;
+  min-height: 180px;
+  flex: 1;
+}
+
+.upload-zone:hover {
+  border-color: var(--accent);
+  background: rgba(147, 117, 192, 0.03);
+}
+
+.upload-zone.drag-over {
+  border-color: var(--accent);
+  background: var(--accent-muted);
+  transform: scale(1.01);
+}
+
+.upload-zone-icon {
+  width: 48px;
+  height: 48px;
+  color: var(--text-secondary);
+  transition: color 0.2s ease;
+}
+
+.upload-zone:hover .upload-zone-icon {
+  color: var(--accent);
+}
+
+.upload-zone-title {
+  font-family: var(--font-heading);
+  font-size: 16px;
+  font-weight: 600;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--text-primary);
+}
+
+.upload-zone-subtitle {
+  font-size: 13px;
+  color: var(--text-muted);
+}
+
+/* Google Drive input */
+.gdrive-input-wrap {
+  width: 100%;
+  max-width: 480px;
+  margin-top: var(--spacing-sm);
+}
+
+.gdrive-input-wrap input {
+  text-align: center;
+  font-size: 13px;
+}
+
+/* File list */
+.file-list {
+  width: 100%;
+  max-width: 900px;
+  margin-top: var(--spacing-lg);
+}
+
+.file-list-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: var(--spacing-md);
+}
+
+.file-list-header h3 {
+  font-family: var(--font-heading);
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--text-secondary);
+}
+
+.file-item {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-md);
+  padding: 14px 20px;
+  background: var(--bg-card);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  margin-bottom: var(--spacing-sm);
+  animation: fadeIn 0.3s ease-out;
+}
+
+.file-item-icon {
+  width: 32px;
+  height: 32px;
+  background: var(--accent-muted);
+  border-radius: var(--radius-sm);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--accent);
+  flex-shrink: 0;
+}
+
+.file-item-name {
+  flex: 1;
+  font-size: 14px;
+  color: var(--text-primary);
+}
+
+.file-item-type {
+  font-family: var(--font-heading);
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  background: var(--bg-elevated);
+  padding: 3px 10px;
+  border-radius: var(--radius-pill);
+}
+
+.file-item-remove {
+  color: var(--text-muted);
+  transition: color 0.2s ease;
+  padding: 4px;
+}
+
+.file-item-remove:hover {
+  color: var(--error);
+}
+
+/* Process button */
+.process-section {
+  width: 100%;
+  max-width: 900px;
+  margin-top: var(--spacing-xl);
+  display: flex;
+  justify-content: center;
+}
+
+.process-section .btn {
+  width: 100%;
+  max-width: 400px;
+  padding: 18px 32px;
+  font-size: 14px;
+}
+
+/* Responsive: stack zones on mobile */
+@media (max-width: 768px) {
+  .upload-zones {
+    flex-direction: column;
+  }
+}
+
+/* Loading overlay */
+.loading-overlay {
+  position: fixed;
+  inset: 0;
+  background: var(--bg-primary);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--spacing-xl);
+  z-index: 9999;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.4s ease;
+}
+
+.loading-overlay.active {
+  opacity: 1;
+  pointer-events: all;
+}
+
+.loading-bar {
+  width: 300px;
+  height: 3px;
+  background: var(--bg-elevated);
+  border-radius: 2px;
+  overflow: hidden;
+}
+
+.loading-bar-fill {
+  height: 100%;
+  width: 40%;
+  background: var(--gradient-full);
+  background-size: 200% 100%;
+  animation: gradientSweep 1.5s ease infinite;
+  border-radius: 2px;
+}
+
+.loading-text {
+  font-family: var(--font-heading);
+  font-size: 13px;
+  font-weight: 500;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: var(--text-secondary);
+  animation: pulse 2s ease-in-out infinite;
+}
+
+.loading-subtext {
+  font-size: 14px;
+  color: var(--text-muted);
+  margin-top: -12px;
+}
+
+.loading-file-name {
+  font-size: 12px;
+  color: var(--text-muted);
+  font-family: var(--font-body);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.loading-file-name.visible {
+  opacity: 1;
+}
