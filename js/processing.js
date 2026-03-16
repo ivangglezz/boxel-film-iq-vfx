@@ -274,6 +274,9 @@ document.addEventListener('DOMContentLoaded', () => {
     summaryEl.classList.add('visible');
     await delay(600);
 
+    // Point "VIEW PROPOSALS" link to the detail page for this project
+    const viewLink = summaryActions.querySelector('a');
+    if (viewLink) viewLink.href = `detail.html?id=${project.id}`;
     summaryActions.style.display = 'flex';
   }
 

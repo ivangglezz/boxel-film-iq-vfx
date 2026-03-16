@@ -26,11 +26,33 @@ document.addEventListener('DOMContentLoaded', () => {
 
   renderAll();
 
-  function renderAll() {
+  function renderAll(partial) {
     const sidebar = document.querySelector('.scene-sidebar');
     const savedScroll = sidebar ? sidebar.scrollTop : 0;
-
     const freshProject = Store.getProject(projectId);
+
+    if (partial === 'opportunities') {
+      // Only update sections affected by opportunity changes (avoids script flicker)
+      const headerEl = document.querySelector('.detail-header');
+      if (headerEl) headerEl.outerHTML = renderHeader(freshProject);
+
+      const sceneDetailEl = document.querySelector('.scene-detail');
+      if (sceneDetailEl) sceneDetailEl.outerHTML = renderSceneDetail(freshProject);
+
+      const listsEl = document.querySelector('.detail-lists');
+      if (listsEl) listsEl.outerHTML = renderDetailLists(freshProject);
+
+      const sidebarEl = document.querySelector('.scene-sidebar');
+      if (sidebarEl) {
+        sidebarEl.outerHTML = renderSidebar(freshProject);
+        const newSidebar = document.querySelector('.scene-sidebar');
+        if (newSidebar) newSidebar.scrollTop = savedScroll;
+      }
+
+      bindEvents();
+      return;
+    }
+
     document.getElementById('app').innerHTML = `
       ${renderHeader(freshProject)}
       <div class="gradient-divider"></div>
@@ -331,7 +353,7 @@ document.addEventListener('DOMContentLoaded', () => {
         opportunityList: oppList,
         opportunities: selectedCount
       });
-      renderAll();
+      renderAll('opportunities');
     }
 
     document.querySelectorAll('.opp-remove-btn').forEach(btn => {
@@ -358,7 +380,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const oppList = [...scene.opportunityList];
         oppList[oppIndex] = { ...oppList[oppIndex], amount: parseFormattedNumber(input.value) };
         Store.updateScene(projectId, sceneId, { opportunityList: oppList });
-        renderAll();
+        renderAll('opportunities');
       });
     });
 
@@ -379,7 +401,7 @@ document.addEventListener('DOMContentLoaded', () => {
           opportunityList: oppList,
           opportunities: oppList.filter(o => o.selected).length
         });
-        renderAll();
+        renderAll('opportunities');
       });
     }
 
