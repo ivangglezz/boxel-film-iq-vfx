@@ -18,13 +18,76 @@ document.addEventListener('DOMContentLoaded', () => {
 
   renderConfirmation(project);
 
+  function renderItemRow(item) {
+    const rowClass = item.status === 'declined' ? 'declined' : '';
+    const statusBadge = item.status === 'approved'
+      ? '<span class="badge badge-success">APPROVED</span>'
+      : item.status === 'declined'
+      ? '<span class="badge badge-error">DECLINED</span>'
+      : '<span class="badge">PENDING</span>';
+
+    const selectedOpps = (item.opportunityList || [])
+      .filter(o => o.selected)
+      .sort((a, b) => (a.custom ? 1 : 0) - (b.custom ? 1 : 0));
+    const oppsText = selectedOpps
+      .map(o => o.name + ' (' + formatCurrency(o.amount || 0) + ')' + (o.custom ? ' *' : ''))
+      .join(', ') || '—';
+
+    return '<tr class="' + rowClass + '">' +
+      '<td class="td-scene-name">' + item.name + '</td>' +
+      '<td class="td-opps">' + oppsText + '</td>' +
+      '<td class="td-cost">' + formatCurrency(item.cost) + '</td>' +
+      '<td>' + statusBadge + '</td>' +
+      '</tr>';
+  }
+
+  function renderCategoryTable(items, categoryLabel, itemLabel) {
+    if (!items || items.length === 0) return '';
+
+    const hasCustom = items.some(function(s) {
+      return (s.opportunityList || []).some(function(o) { return o.selected && o.custom; });
+    });
+    const catApproved = items.filter(function(s) { return s.status !== 'declined'; })
+      .reduce(function(sum, s) { return sum + (s.cost || 0); }, 0);
+
+    const rows = items.map(renderItemRow).join('');
+
+    return '<div class="confirm-table-wrap">' +
+      '<div class="confirm-table-header"><h3>' + categoryLabel + ' Breakdown</h3></div>' +
+      '<table class="confirm-table">' +
+      '<thead><tr><th>' + itemLabel + '</th><th>Opportunities</th><th>Cost</th><th>Status</th></tr></thead>' +
+      '<tbody>' + rows + '</tbody>' +
+      '<tfoot><tr><td class="total-label" colspan="2">APPROVED TOTAL</td>' +
+      '<td class="total-value" colspan="2">' + formatCurrency(catApproved) + '</td></tr></tfoot>' +
+      (hasCustom ? '<div class="confirm-footnote">* Custom opportunity</div>' : '') +
+      '</table></div>';
+  }
+
   function renderConfirmation(p) {
-    const approvedScenes = p.scenes.filter(s => s.status !== 'declined');
-    const declinedScenes = p.scenes.filter(s => s.status === 'declined');
-    const approvedCost = approvedScenes.reduce((sum, s) => sum + s.cost, 0);
-    const declinedCost = declinedScenes.reduce((sum, s) => sum + s.cost, 0);
-    const totalOpps = approvedScenes.reduce((count, s) => count + (s.opportunityList || []).filter(o => o.selected).length, 0);
+    const categories = typeof ALL_CATEGORIES !== 'undefined' ? ALL_CATEGORIES : ['scenes', 'characters', 'environments'];
+    let approvedCost = 0;
+    let declinedCost = 0;
+    let totalOpps = 0;
+    let totalApprovedItems = 0;
+    let totalItems = 0;
+
+    categories.forEach(function(cat) {
+      (p[cat] || []).forEach(function(item) {
+        totalItems++;
+        if (item.status !== 'declined') {
+          approvedCost += item.cost || 0;
+          totalApprovedItems++;
+          totalOpps += (item.opportunityList || []).filter(function(o) { return o.selected; }).length;
+        } else {
+          declinedCost += item.cost || 0;
+        }
+      });
+    });
+
     const today = new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
+
+    const charsCount = (p.characters || []).length;
+    const envsCount = (p.environments || []).length;
 
     document.getElementById('confirm-content').innerHTML = `
       <!-- Summary Card -->
@@ -39,7 +102,7 @@ document.addEventListener('DOMContentLoaded', () => {
             <div class="confirm-total">
               <div class="confirm-total-label">ESTIMATED TOTAL</div>
               <div class="confirm-total-value">${formatCurrency(approvedCost)}</div>
-              ${declinedScenes.length > 0 ? `<div class="confirm-total-approved">${approvedScenes.length} of ${p.scenes.length} scenes approved</div>` : ''}
+              ${totalItems !== totalApprovedItems ? '<div class="confirm-total-approved">' + totalApprovedItems + ' of ' + totalItems + ' items approved</div>' : ''}
             </div>
           </div>
           <div class="confirm-meta">
@@ -53,8 +116,10 @@ document.addEventListener('DOMContentLoaded', () => {
             </div>
             <div class="confirm-meta-item">
               <span class="confirm-meta-label">SCENES</span>
-              <span class="confirm-meta-value">${approvedScenes.length} approved</span>
+              <span class="confirm-meta-value">${(p.scenes || []).length}</span>
             </div>
+            ${charsCount > 0 ? '<div class="confirm-meta-item"><span class="confirm-meta-label">CHARACTERS</span><span class="confirm-meta-value">' + charsCount + '</span></div>' : ''}
+            ${envsCount > 0 ? '<div class="confirm-meta-item"><span class="confirm-meta-label">ENVIRONMENTS</span><span class="confirm-meta-value">' + envsCount + '</span></div>' : ''}
             <div class="confirm-meta-item">
               <span class="confirm-meta-label">OPPORTUNITIES</span>
               <span class="confirm-meta-value">${totalOpps}</span>
@@ -67,55 +132,13 @@ document.addEventListener('DOMContentLoaded', () => {
         </div>
       </div>
 
-      <!-- Breakdown Table -->
+      <!-- Breakdown Tables -->
+      ${renderCategoryTable(p.scenes, 'Scene', 'Scene')}
+      ${renderCategoryTable(p.characters, 'Character', 'Character')}
+      ${renderCategoryTable(p.environments, 'Environment', 'Environment')}
+
+      <!-- Totals -->
       <div class="confirm-table-wrap">
-        <div class="confirm-table-header">
-          <h3>Scene Breakdown</h3>
-        </div>
-        <table class="confirm-table">
-          <thead>
-            <tr>
-              <th>Scene</th>
-              <th>Opportunities</th>
-              <th>Cost</th>
-              <th>Status</th>
-            </tr>
-          </thead>
-          <tbody>
-            ${p.scenes.map(scene => {
-              const rowClass = scene.status === 'declined' ? 'declined' : '';
-              const statusBadge = scene.status === 'approved'
-                ? '<span class="badge badge-success">APPROVED</span>'
-                : scene.status === 'declined'
-                ? '<span class="badge badge-error">DECLINED</span>'
-                : '<span class="badge">PENDING</span>';
-
-              const selectedOpps = (scene.opportunityList || [])
-                .filter(o => o.selected)
-                .sort((a, b) => (a.custom ? 1 : 0) - (b.custom ? 1 : 0));
-              const hasCustom = selectedOpps.some(o => o.custom);
-              const oppsText = selectedOpps
-                .map(o => `${o.name} (${formatCurrency(o.amount || 0)})${o.custom ? ' *' : ''}`)
-                .join(', ') || '—';
-
-              return `
-                <tr class="${rowClass}">
-                  <td class="td-scene-name">${scene.name}</td>
-                  <td class="td-opps">${oppsText}</td>
-                  <td class="td-cost">${formatCurrency(scene.cost)}</td>
-                  <td>${statusBadge}</td>
-                </tr>
-              `;
-            }).join('')}
-          </tbody>
-          <tfoot>
-            <tr>
-              <td class="total-label" colspan="2">APPROVED TOTAL</td>
-              <td class="total-value" colspan="2">${formatCurrency(approvedCost)}</td>
-            </tr>
-          </tfoot>
-          ${p.scenes.some(s => (s.opportunityList || []).some(o => o.selected && o.custom)) ? '<div class="confirm-footnote">* Custom opportunity</div>' : ''}
-        </table>
         <div class="confirm-breakdown">
           <div class="confirm-breakdown-item">
             <span class="confirm-breakdown-label">APPROVED</span>

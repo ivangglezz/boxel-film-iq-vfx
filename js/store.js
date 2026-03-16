@@ -11,13 +11,16 @@ const Store = {
     if (!existing) {
       localStorage.setItem(STORE_KEY, JSON.stringify(SEED_DATA));
     } else {
-      // Migrate: if old data has actionSequences instead of complexity, reset
       const data = JSON.parse(existing);
       const firstScene = data.projects && data.projects[0] && data.projects[0].scenes && data.projects[0].scenes[0];
+
+      // Migrate: if old data has no opportunityList, reset
       if (firstScene && !firstScene.opportunityList) {
         localStorage.setItem(STORE_KEY, JSON.stringify(SEED_DATA));
+        return this.getAll();
       }
-      // Migrate: add amount to opportunities if missing (replaces old hours field)
+
+      // Migrate: add amount to opportunities if missing
       const firstOpp = firstScene && firstScene.opportunityList && firstScene.opportunityList[0];
       if (firstOpp && firstOpp.amount === undefined) {
         data.projects.forEach(p => {
@@ -31,6 +34,20 @@ const Store = {
           });
         });
         localStorage.setItem(STORE_KEY, JSON.stringify(data));
+      }
+
+      // Migrate: add characters/environments arrays if missing
+      const firstProject = data.projects && data.projects[0];
+      if (firstProject && !firstProject.characters) {
+        localStorage.setItem(STORE_KEY, JSON.stringify(SEED_DATA));
+        return this.getAll();
+      }
+
+      // Migrate: add sceneIds to characters if missing
+      const firstChar = firstProject && firstProject.characters && firstProject.characters[0];
+      if (firstChar && !firstChar.sceneIds) {
+        localStorage.setItem(STORE_KEY, JSON.stringify(SEED_DATA));
+        return this.getAll();
       }
     }
     return this.getAll();
@@ -68,54 +85,79 @@ const Store = {
     return data.projects[idx];
   },
 
-  /** Get a specific scene */
-  getScene(projectId, sceneId) {
+  /** Get item from any category */
+  getItem(projectId, category, itemId) {
     const project = this.getProject(projectId);
     if (!project) return null;
-    return project.scenes.find(s => s.id === sceneId) || null;
+    const list = project[category] || [];
+    return list.find(item => item.id === itemId) || null;
   },
 
-  /** Update a scene within a project */
-  updateScene(projectId, sceneId, updates) {
+  /** Update item in any category */
+  updateItem(projectId, category, itemId, updates) {
     const data = this.getAll();
     const project = data.projects.find(p => p.id === projectId);
     if (!project) return null;
-    const sceneIdx = project.scenes.findIndex(s => s.id === sceneId);
-    if (sceneIdx === -1) return null;
-    project.scenes[sceneIdx] = { ...project.scenes[sceneIdx], ...updates };
+    const list = project[category] || [];
+    const idx = list.findIndex(item => item.id === itemId);
+    if (idx === -1) return null;
+    list[idx] = { ...list[idx], ...updates };
     this.recalculateProjectTotals(data, projectId);
     localStorage.setItem(STORE_KEY, JSON.stringify(data));
-    return project.scenes[sceneIdx];
+    return list[idx];
   },
 
-  /** Recalculate project totals from scenes (scene.cost = sum of selected opportunity amounts) */
+  /** Get a specific scene (backward compat wrapper) */
+  getScene(projectId, sceneId) {
+    return this.getItem(projectId, 'scenes', sceneId);
+  },
+
+  /** Update a scene within a project (backward compat wrapper) */
+  updateScene(projectId, sceneId, updates) {
+    return this.updateItem(projectId, 'scenes', sceneId, updates);
+  },
+
+  /** Recalculate project totals across all categories */
   recalculateProjectTotals(data, projectId) {
     const project = data.projects.find(p => p.id === projectId);
     if (!project) return;
 
-    // Recalculate each scene's cost from its selected opportunity amounts
-    project.scenes.forEach(s => {
-      const selectedOpps = (s.opportunityList || []).filter(o => o.selected);
-      if (selectedOpps.length > 0) {
-        s.cost = selectedOpps.reduce((sum, o) => sum + (o.amount || 0), 0);
-      }
+    const categories = typeof ALL_CATEGORIES !== 'undefined' ? ALL_CATEGORIES : ['scenes', 'characters', 'environments'];
+    let totalCost = 0;
+    const oppSet = new Set();
+
+    categories.forEach(cat => {
+      (project[cat] || []).forEach(item => {
+        const selectedOpps = (item.opportunityList || []).filter(o => o.selected);
+        if (selectedOpps.length > 0) {
+          item.cost = selectedOpps.reduce((sum, o) => sum + (o.amount || 0), 0);
+        }
+        totalCost += item.cost || 0;
+        selectedOpps.forEach(o => oppSet.add(o.name));
+      });
     });
 
-    project.totalCost = project.scenes.reduce((sum, s) => sum + (s.cost || 0), 0);
-    project.totalOpportunities = project.scenes.reduce((set, s) => {
-      (s.opportunityList || []).filter(o => o.selected).forEach(o => set.add(o.name));
-      return set;
-    }, new Set()).size;
-    project.totalScenes = project.scenes.length;
+    project.totalCost = totalCost;
+    project.totalOpportunities = oppSet.size;
+    project.totalScenes = (project.scenes || []).length;
+    project.totalCharacters = (project.characters || []).length;
+    project.totalEnvironments = (project.environments || []).length;
   },
 
-  /** Get approved cost for a project */
+  /** Get approved cost for a project (across all categories) */
   getApprovedCost(projectId) {
     const project = this.getProject(projectId);
     if (!project) return 0;
-    return project.scenes
-      .filter(s => s.status !== 'declined')
-      .reduce((sum, s) => sum + (s.cost || 0), 0);
+    const categories = typeof ALL_CATEGORIES !== 'undefined' ? ALL_CATEGORIES : ['scenes', 'characters', 'environments'];
+    let total = 0;
+    categories.forEach(cat => {
+      (project[cat] || []).forEach(item => {
+        if (item.status !== 'declined') {
+          total += item.cost || 0;
+        }
+      });
+    });
+    return total;
   },
 
   /** Get uploaded files */

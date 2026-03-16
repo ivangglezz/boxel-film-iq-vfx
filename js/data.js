@@ -22,6 +22,8 @@ const OPPORTUNITY_CATALOG = [
   "UE Previz"
 ];
 
+const ALL_CATEGORIES = ['scenes', 'characters', 'environments'];
+
 const SEED_DATA = {
   projects: [
     {
@@ -222,7 +224,190 @@ const SEED_DATA = {
             { name: "CG Integration", selected: false, amount: 0 }
           ],
         }
-      ]
+      ],
+      characters: [
+        {
+          id: "ms-char-1",
+          name: "Kermit the Frog",
+          role: "Lead",
+          description: "The heart and soul of the Muppet Theater. Green-skinned frog who serves as host, stage manager, and occasional performer. Optimistic but constantly stressed by backstage chaos.",
+          sceneCount: 8,
+          sceneIds: ["ms-scene-1", "ms-scene-2", "ms-scene-3", "ms-scene-5", "ms-scene-6", "ms-scene-7", "ms-scene-8"],
+          vfxNeeded: true,
+          vfxNotes: "Full CG puppet for wide shots and flying sequences. Lip sync refinement for musical numbers. Wire removal for puppeteer rigs.",
+          opportunityList: [
+            { name: "CG Asset", selected: true, amount: 22000 },
+            { name: "Character Animation", selected: true, amount: 18000 },
+            { name: "2D Comp", selected: true, amount: 12000 },
+            { name: "Rig", selected: true, amount: 15000 },
+            { name: "Character Design", selected: false, amount: 0 }
+          ],
+          cost: 67000,
+          status: "pending"
+        },
+        {
+          id: "ms-char-2",
+          name: "Miss Piggy",
+          role: "Lead",
+          description: "Glamorous, larger-than-life diva pig. Demands the spotlight and resorts to karate chops when crossed. Secretly insecure beneath the bravado.",
+          sceneCount: 6,
+          sceneIds: ["ms-scene-1", "ms-scene-2", "ms-scene-5", "ms-scene-6"],
+          vfxNeeded: true,
+          vfxNotes: "CG enhancement for karate sequences and flying kicks. Hair/dress simulation for elaborate gown scenes. Digi double for stunt choreography.",
+          opportunityList: [
+            { name: "CG Asset", selected: true, amount: 18000 },
+            { name: "Character Animation", selected: true, amount: 16000 },
+            { name: "Digi Double", selected: true, amount: 14000 },
+            { name: "FX", selected: true, amount: 8000 },
+            { name: "2D Comp", selected: false, amount: 0 }
+          ],
+          cost: 56000,
+          status: "pending"
+        },
+        {
+          id: "ms-char-3",
+          name: "Gonzo the Great",
+          role: "Supporting",
+          description: "Self-proclaimed daredevil and performance artist of indeterminate species. Performs dangerous stunts involving cannons, chickens, and flaming objects.",
+          sceneCount: 5,
+          sceneIds: ["ms-scene-2", "ms-scene-4", "ms-scene-6"],
+          vfxNeeded: true,
+          vfxNotes: "Cannon launch sequences require full CG trajectory. Flaming torch juggling with FX fire simulation. Unicycle stunts with wire removal.",
+          opportunityList: [
+            { name: "FX", selected: true, amount: 15000 },
+            { name: "Animation", selected: true, amount: 12000 },
+            { name: "CG Asset", selected: true, amount: 10000 },
+            { name: "2D Comp", selected: true, amount: 8000 },
+            { name: "Digi Double", selected: false, amount: 0 }
+          ],
+          cost: 45000,
+          status: "pending"
+        },
+        {
+          id: "ms-char-4",
+          name: "Animal",
+          role: "Supporting",
+          description: "Wild, uncontrollable drummer for the Electric Mayhem band. Communicates mostly through grunts and single words. Kept on a chain by Floyd.",
+          sceneCount: 4,
+          sceneIds: ["ms-scene-1", "ms-scene-3", "ms-scene-6"],
+          vfxNeeded: true,
+          vfxNotes: "Drum destruction FX. Hair simulation for wild mane. CG cymbal debris and drum stick particles.",
+          opportunityList: [
+            { name: "FX", selected: true, amount: 12000 },
+            { name: "Character Animation", selected: true, amount: 10000 },
+            { name: "2D Comp", selected: true, amount: 6000 },
+            { name: "CG Asset", selected: false, amount: 0 }
+          ],
+          cost: 28000,
+          status: "pending"
+        },
+        {
+          id: "ms-char-5",
+          name: "Statler & Waldorf",
+          role: "Supporting",
+          description: "Two elderly hecklers who watch every show from their balcony box. Relentlessly mock the performances but never miss a show.",
+          sceneCount: 5,
+          sceneIds: ["ms-scene-1", "ms-scene-3", "ms-scene-6", "ms-scene-8"],
+          vfxNeeded: false,
+          vfxNotes: "Minimal VFX. Occasional balcony railing enhancement and lighting adjustments for balcony box compositing.",
+          opportunityList: [
+            { name: "2D Comp", selected: true, amount: 5000 },
+            { name: "CG Integration", selected: false, amount: 0 }
+          ],
+          cost: 5000,
+          status: "pending"
+        }
+      ],
+      environments: [
+        {
+          id: "ms-env-1",
+          name: "Muppet Theater — Main Stage",
+          type: "INT",
+          sceneIds: ["ms-scene-1", "ms-scene-3", "ms-scene-6"],
+          settingDescription: "Classic vaudeville theater stage with red velvet curtains, wooden floorboards, and a proscenium arch. Transforms for each act with different backdrops and lighting setups.",
+          vfxComplexity: "High",
+          vfxNotes: "Multiple CG backdrops needed per episode. Stage lighting simulation. Curtain animation. Audience compositing for wide shots. Firefly and particle effects for musical numbers.",
+          opportunityList: [
+            { name: "CG Environments", selected: true, amount: 28000 },
+            { name: "2D Comp", selected: true, amount: 18000 },
+            { name: "FX", selected: true, amount: 12000 },
+            { name: "Environment Design", selected: true, amount: 10000 },
+            { name: "3D Layout", selected: false, amount: 0 }
+          ],
+          cost: 68000,
+          status: "pending"
+        },
+        {
+          id: "ms-env-2",
+          name: "Backstage Area",
+          type: "INT",
+          sceneIds: ["ms-scene-2"],
+          settingDescription: "Chaotic maze of corridors, dressing rooms, and prop storage. Ropes, sandbags, and theatrical equipment line every surface. Always in a state of controlled pandemonium.",
+          vfxComplexity: "Medium",
+          vfxNotes: "Flying props and debris FX. Sandbag physics. Set extension for longer corridor shots. Practical set with CG enhancements.",
+          opportunityList: [
+            { name: "FX", selected: true, amount: 14000 },
+            { name: "2D Comp", selected: true, amount: 10000 },
+            { name: "CG Integration", selected: true, amount: 8000 },
+            { name: "CG Environments", selected: false, amount: 0 }
+          ],
+          cost: 32000,
+          status: "pending"
+        },
+        {
+          id: "ms-env-3",
+          name: "Orchestra Pit",
+          type: "INT",
+          sceneIds: ["ms-scene-1", "ms-scene-3"],
+          settingDescription: "Sunken area below the stage housing the Electric Mayhem band. Cramped space filled with instruments, amplifiers, and chaotic energy.",
+          vfxComplexity: "Medium",
+          vfxNotes: "Instrument CG enhancement. Sound wave visualization FX. Drum destruction particle effects. Lighting effects synced with musical performance.",
+          opportunityList: [
+            { name: "FX", selected: true, amount: 12000 },
+            { name: "CG Asset", selected: true, amount: 8000 },
+            { name: "2D Comp", selected: true, amount: 6000 },
+            { name: "Animation", selected: false, amount: 0 }
+          ],
+          cost: 26000,
+          status: "pending"
+        },
+        {
+          id: "ms-env-4",
+          name: "Swamp Setting (Rainbow Connection)",
+          type: "EXT",
+          sceneIds: ["ms-scene-3"],
+          settingDescription: "Magical, serene swamp with lily pads, willow trees, and a fallen log. Moonlit atmosphere with fireflies and a shimmering rainbow overhead.",
+          vfxComplexity: "High",
+          vfxNotes: "Full CG environment. Firefly particle system. Rainbow materialization with light scattering. Water reflection simulation. Atmospheric fog and moonlight volumetrics.",
+          opportunityList: [
+            { name: "CG Environments", selected: true, amount: 35000 },
+            { name: "FX", selected: true, amount: 20000 },
+            { name: "Environment Design", selected: true, amount: 12000 },
+            { name: "2D Comp", selected: true, amount: 10000 },
+            { name: "3D Layout", selected: true, amount: 8000 }
+          ],
+          cost: 85000,
+          status: "pending"
+        },
+        {
+          id: "ms-env-5",
+          name: "Balcony Box (Statler & Waldorf)",
+          type: "INT",
+          sceneIds: ["ms-scene-1", "ms-scene-8"],
+          settingDescription: "Ornate theater balcony box with plush red seating, gold railings, and a view overlooking the stage below.",
+          vfxComplexity: "Low",
+          vfxNotes: "Stage view compositing from balcony perspective. Railing enhancement. Occasional thrown produce FX.",
+          opportunityList: [
+            { name: "2D Comp", selected: true, amount: 6000 },
+            { name: "CG Integration", selected: true, amount: 4000 },
+            { name: "FX", selected: false, amount: 0 }
+          ],
+          cost: 10000,
+          status: "pending"
+        }
+      ],
+      totalCharacters: 5,
+      totalEnvironments: 5
     },
     {
       id: "lincoln-lawyer-s4",

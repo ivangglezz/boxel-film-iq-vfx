@@ -91,7 +91,7 @@
 
 /* --- Scene Sidebar --- */
 .scene-sidebar {
-  width: 280px;
+  width: 340px;
   background: var(--bg-surface);
   border-right: 1px solid var(--border-subtle);
   overflow-y: auto;
@@ -695,4 +695,308 @@
   border-radius: var(--radius-pill);
   margin-left: 8px;
   vertical-align: middle;
+}
+
+/* ==========================================================================
+   Category Tabs (Sidebar)
+   ========================================================================== */
+.sidebar-category-tabs {
+  display: flex;
+  gap: 4px;
+  padding: 0 var(--spacing-xs);
+  flex-shrink: 0;
+}
+
+.sidebar-cat-tab {
+  flex: 1;
+  padding: 8px 4px;
+  font-family: var(--font-heading);
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  background: transparent;
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  text-align: center;
+  white-space: nowrap;
+}
+
+.sidebar-cat-tab:hover {
+  color: var(--text-secondary);
+  border-color: var(--border-default);
+  background: var(--bg-elevated);
+}
+
+.sidebar-cat-tab.active {
+  color: var(--accent);
+  border-color: var(--accent);
+  background: var(--accent-muted);
+}
+
+/* ==========================================================================
+   Character Card Variants
+   ========================================================================== */
+.char-card-thumb {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 80px;
+  background: var(--bg-elevated);
+  position: relative;
+}
+
+.char-avatar {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-heading);
+  font-size: 16px;
+  font-weight: 700;
+  color: #fff;
+  letter-spacing: 1px;
+}
+
+.role-badge {
+  font-family: var(--font-heading);
+  font-size: 9px;
+  font-weight: 600;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  padding: 2px 8px;
+  border-radius: var(--radius-pill);
+}
+
+.role-lead {
+  background: var(--accent-muted);
+  color: var(--accent);
+}
+
+.role-supporting {
+  background: rgba(50, 213, 131, 0.15);
+  color: var(--success);
+}
+
+.role-minor {
+  background: rgba(106, 120, 135, 0.2);
+  color: var(--text-secondary);
+}
+
+/* Inline role badges for detail panel */
+.role-badge-inline {
+  font-family: var(--font-heading);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  padding: 3px 10px;
+  border-radius: var(--radius-pill);
+}
+
+.role-badge-lead {
+  background: var(--accent-muted);
+  color: var(--accent);
+}
+
+.role-badge-supporting {
+  background: rgba(50, 213, 131, 0.15);
+  color: var(--success);
+}
+
+.role-badge-minor {
+  background: rgba(106, 120, 135, 0.2);
+  color: var(--text-secondary);
+}
+
+/* ==========================================================================
+   Environment Card Variants
+   ========================================================================== */
+.env-card-thumb {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  height: 60px;
+  padding: 8px;
+  position: relative;
+}
+
+.env-type-badge {
+  font-family: var(--font-heading);
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  padding: 3px 8px;
+  border-radius: var(--radius-sm);
+  background: rgba(0, 0, 0, 0.6);
+  color: var(--text-primary);
+}
+
+.env-type-badge.env-ext {
+  color: var(--success);
+  border: 1px solid rgba(50, 213, 131, 0.3);
+}
+
+.env-type-badge.env-int {
+  color: var(--accent);
+  border: 1px solid rgba(147, 117, 192, 0.3);
+}
+
+.env-type-badge.env-mixed {
+  color: var(--warning);
+  border: 1px solid rgba(255, 181, 71, 0.3);
+}
+
+.env-complexity-badge {
+  font-family: var(--font-heading);
+  font-size: 9px;
+  font-weight: 600;
+  letter-spacing: 1px;
+  padding: 3px 8px;
+  border-radius: var(--radius-sm);
+  background: rgba(0, 0, 0, 0.6);
+  color: var(--text-secondary);
+}
+
+.env-type-inline {
+  font-family: var(--font-heading);
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 1px;
+  padding: 2px 8px;
+  border-radius: var(--radius-sm);
+  background: var(--bg-elevated);
+  color: var(--text-primary);
+}
+
+/* ==========================================================================
+   Info Panel (Characters & Environments right panel)
+   ========================================================================== */
+.info-panel {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-xl);
+}
+
+.info-panel-section {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-sm);
+}
+
+.info-panel-label {
+  font-family: var(--font-heading);
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  margin: 0;
+}
+
+.info-panel-text {
+  font-family: var(--font-body);
+  font-size: 14px;
+  line-height: 1.7;
+  color: var(--text-secondary);
+  margin: 0;
+}
+
+.info-panel-meta {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-md);
+  padding-top: var(--spacing-md);
+  border-top: 1px solid var(--border-subtle);
+}
+
+.info-panel-meta-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.info-panel-meta-label {
+  font-family: var(--font-heading);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+.info-panel-meta-value {
+  font-family: var(--font-body);
+  font-size: 14px;
+  color: var(--text-primary);
+}
+
+/* ==========================================================================
+   Script Navigation (Prev/Next)
+   ========================================================================== */
+.script-nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 16px;
+  border-top: 1px solid var(--border-subtle);
+  background: var(--bg-surface);
+  flex-shrink: 0;
+}
+
+.script-nav-btn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-family: var(--font-heading);
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: var(--text-secondary);
+  background: transparent;
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-sm);
+  padding: 8px 16px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.script-nav-btn:hover:not(:disabled) {
+  color: var(--accent);
+  border-color: var(--accent);
+  background: var(--accent-muted);
+}
+
+.script-nav-btn:disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+}
+
+.script-nav-label {
+  font-family: var(--font-heading);
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+/* Highlighted scene block (for character/environment script views) */
+.script-scene-highlighted {
+  background: rgba(147, 117, 192, 0.06);
+  border-left: 3px solid rgba(147, 117, 192, 0.3);
+  padding: 12px 16px;
+  margin: 8px 0;
+  border-radius: 4px;
+  color: var(--text-secondary);
+}
+
+.script-scene-highlighted .script-scene-label {
+  color: var(--accent);
+  opacity: 0.7;
 }
