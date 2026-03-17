@@ -43,6 +43,10 @@ const SEED_DATA = {
         {
           id: "ms-scene-1",
           name: "Opening Theater Curtain",
+          thumbnail: "images/scenes/openingTheaterCurtain.png",
+          preview: "images/scenes/openingTheaterCurtain_Preview.mp4",
+          description: "The iconic opening of The Muppet Show. The velvet curtain rises to reveal Kermit center stage under a spotlight, joined by Animal on drums and Fozzie peeking from backstage. Statler and Waldorf deliver their signature heckling from the balcony.",
+          vfxNotes: "CG curtain simulation with realistic fabric dynamics. Volumetric spotlight with dust particles. Orchestra pit requires CG instrument augmentation and crowd fill. 2D comp for theatrical lighting effects and stage atmosphere.",
           duration: "45s",
           scriptPagesStart: 1,
           scriptPagesEnd: 4,
@@ -66,6 +70,9 @@ const SEED_DATA = {
         {
           id: "ms-scene-2",
           name: "Backstage Chaos",
+          thumbnail: "images/scenes/BackstageChaos.png",
+          description: "Pandemonium erupts backstage as the show goes live. Scooter scrambles with a clipboard, Gonzo rides a unicycle juggling flaming torches, and Miss Piggy bulldozes through everyone in an elaborate gown, karate-chopping anyone in her path.",
+          vfxNotes: "CG fire simulation for Gonzo's flaming torches with interactive lighting. FX for flying props and falling sandbags. Hair and dress cloth simulation on Miss Piggy's gown. 2D comp for motion blur on fast-moving elements and environmental dust.",
           duration: "30s",
           scriptPagesStart: 5,
           scriptPagesEnd: 8,
@@ -89,6 +96,9 @@ const SEED_DATA = {
         {
           id: "ms-scene-3",
           name: "Musical Number - Rainbow Connection",
+          thumbnail: "images/scenes/MusicalNumber-RainbowCurtain.png",
+          description: "The stage transforms into a serene swamp for Kermit's iconic performance of Rainbow Connection. CGI fireflies drift through the air as a magical rainbow materializes above. Robin joins Kermit on the log for a touching duet.",
+          vfxNotes: "Full CG environment for swamp setting with water reflections and vegetation. Particle FX for fireflies with interactive glow. Rainbow effect with prismatic light scattering. Character animation for banjo playing. 2D comp for atmospheric haze and moonlight.",
           duration: "60s",
           scriptPagesStart: 9,
           scriptPagesEnd: 14,
@@ -112,6 +122,9 @@ const SEED_DATA = {
         {
           id: "ms-scene-4",
           name: "Swedish Chef Kitchen Explosion",
+          thumbnail: "images/scenes/SwedishChefKitchenExplosion.png",
+          description: "The Swedish Chef's cooking segment goes spectacularly wrong. A giant fish dodges his cleaver, ingredients fly everywhere, and the kitchen explodes in a fireball — only for the Chef to emerge unscathed with a perfectly plated dish.",
+          vfxNotes: "CG explosion with debris, fire, and smoke simulation. Green smoke VFX from boiling pot. FX for flying ingredients with physically accurate trajectories. CG integration for the post-explosion soot and destruction. Plate dish hero shot comp.",
           duration: "25s",
           scriptPagesStart: 15,
           scriptPagesEnd: 18,
@@ -135,6 +148,9 @@ const SEED_DATA = {
         {
           id: "ms-scene-5",
           name: "Pigs in Space",
+          thumbnail: "images/scenes/PigsInSpace.png",
+          description: "The classic Pigs in Space sketch aboard the Swinetrek. Captain Link Hogthrob attempts to navigate an asteroid field while First Mate Piggy and Dr. Strangepork bicker. The ship inevitably crashes into an asteroid.",
+          vfxNotes: "Full CG space environment with starfield and asteroid field. Ship interior VFX for shaking and sparks. Viewscreen compositing with streaking stars and approaching asteroids. 2D comp for impact flash and structural damage. On-set supervision for practical shake effects.",
           duration: "35s",
           scriptPagesStart: 19,
           scriptPagesEnd: 23,
@@ -158,6 +174,9 @@ const SEED_DATA = {
         {
           id: "ms-scene-6",
           name: "Grand Finale Ensemble",
+          thumbnail: "images/scenes/GrandFinaleEnsemble.png",
+          description: "The full Muppet cast gathers on stage for the big closing number. Confetti cannons fire, streamers fall from the rafters, and the entire ensemble performs the iconic Muppet Show theme. Kermit delivers the farewell to the audience.",
+          vfxNotes: "Confetti and streamer particle FX with physically accurate falling. Character animation for crowd of Muppets with varied performances. 2D comp for theatrical lighting, lens flares, and stage pyrotechnics. On-set supervision for practical confetti timing.",
           duration: "50s",
           scriptPagesStart: 24,
           scriptPagesEnd: 30,
@@ -181,6 +200,9 @@ const SEED_DATA = {
         {
           id: "ms-scene-7",
           name: "Muppet Labs Incident",
+          thumbnail: "images/scenes/MuppetLabsIncident.png",
+          description: "Bunsen Honeydew demonstrates the Digital Duplication Ray at Muppet Labs. The machine malfunctions and zaps Beaker, creating three identical copies of him — all meeping in terrified unison.",
+          vfxNotes: "CG duplication ray beam with energy particle effects. Character duplication VFX for multiplied Beakers with synced animation. Machine glow and electrical arcing FX. CG integration for lab equipment interaction and ray impact.",
           duration: "20s",
           scriptPagesStart: 31,
           scriptPagesEnd: 34,
@@ -204,6 +226,9 @@ const SEED_DATA = {
         {
           id: "ms-scene-8",
           name: "Balcony Hecklers Closing",
+          thumbnail: "images/scenes/BalconyHecklersClosing.png",
+          description: "Statler and Waldorf deliver their final verdict from the balcony as the theater empties below. Their trademark cackle echoes as the lights fade to black on another episode of The Muppet Show.",
+          vfxNotes: "2D comp for theatrical lighting fade and ambient atmosphere. Animation for subtle character performance. On-set supervision for practical lighting cues and dimming sequence.",
           duration: "15s",
           scriptPagesStart: 35,
           scriptPagesEnd: 36,
@@ -229,6 +254,7 @@ const SEED_DATA = {
         {
           id: "ms-char-1",
           name: "Kermit the Frog",
+          thumbnail: "images/characters/kermitTheFrog.png",
           role: "Lead",
           description: "The heart and soul of the Muppet Theater. Green-skinned frog who serves as host, stage manager, and occasional performer. Optimistic but constantly stressed by backstage chaos.",
           sceneCount: 8,
@@ -248,6 +274,7 @@ const SEED_DATA = {
         {
           id: "ms-char-2",
           name: "Miss Piggy",
+          thumbnail: "images/characters/missPiggy.png",
           role: "Lead",
           description: "Glamorous, larger-than-life diva pig. Demands the spotlight and resorts to karate chops when crossed. Secretly insecure beneath the bravado.",
           sceneCount: 6,
@@ -267,6 +294,7 @@ const SEED_DATA = {
         {
           id: "ms-char-3",
           name: "Gonzo the Great",
+          thumbnail: "images/characters/gonzoTheGreat.png",
           role: "Supporting",
           description: "Self-proclaimed daredevil and performance artist of indeterminate species. Performs dangerous stunts involving cannons, chickens, and flaming objects.",
           sceneCount: 5,
@@ -286,6 +314,7 @@ const SEED_DATA = {
         {
           id: "ms-char-4",
           name: "Animal",
+          thumbnail: "images/characters/animal.png",
           role: "Supporting",
           description: "Wild, uncontrollable drummer for the Electric Mayhem band. Communicates mostly through grunts and single words. Kept on a chain by Floyd.",
           sceneCount: 4,
@@ -304,6 +333,7 @@ const SEED_DATA = {
         {
           id: "ms-char-5",
           name: "Statler & Waldorf",
+          thumbnail: "images/characters/statlerAndWaldorf.png",
           role: "Supporting",
           description: "Two elderly hecklers who watch every show from their balcony box. Relentlessly mock the performances but never miss a show.",
           sceneCount: 5,
@@ -322,6 +352,7 @@ const SEED_DATA = {
         {
           id: "ms-env-1",
           name: "Muppet Theater — Main Stage",
+          thumbnail: "images/environments/muppetTheaterMainStage.png",
           type: "INT",
           sceneIds: ["ms-scene-1", "ms-scene-3", "ms-scene-6"],
           settingDescription: "Classic vaudeville theater stage with red velvet curtains, wooden floorboards, and a proscenium arch. Transforms for each act with different backdrops and lighting setups.",
@@ -340,6 +371,7 @@ const SEED_DATA = {
         {
           id: "ms-env-2",
           name: "Backstage Area",
+          thumbnail: "images/environments/backstageArea.png",
           type: "INT",
           sceneIds: ["ms-scene-2"],
           settingDescription: "Chaotic maze of corridors, dressing rooms, and prop storage. Ropes, sandbags, and theatrical equipment line every surface. Always in a state of controlled pandemonium.",
@@ -357,6 +389,7 @@ const SEED_DATA = {
         {
           id: "ms-env-3",
           name: "Orchestra Pit",
+          thumbnail: "images/environments/orchestraPit.png",
           type: "INT",
           sceneIds: ["ms-scene-1", "ms-scene-3"],
           settingDescription: "Sunken area below the stage housing the Electric Mayhem band. Cramped space filled with instruments, amplifiers, and chaotic energy.",
@@ -374,6 +407,7 @@ const SEED_DATA = {
         {
           id: "ms-env-4",
           name: "Swamp Setting (Rainbow Connection)",
+          thumbnail: "images/environments/swampSetting.png",
           type: "EXT",
           sceneIds: ["ms-scene-3"],
           settingDescription: "Magical, serene swamp with lily pads, willow trees, and a fallen log. Moonlit atmosphere with fireflies and a shimmering rainbow overhead.",
@@ -392,6 +426,7 @@ const SEED_DATA = {
         {
           id: "ms-env-5",
           name: "Balcony Box (Statler & Waldorf)",
+          thumbnail: "images/environments/balconyBox.png",
           type: "INT",
           sceneIds: ["ms-scene-1", "ms-scene-8"],
           settingDescription: "Ornate theater balcony box with plush red seating, gold railings, and a view overlooking the stage below.",

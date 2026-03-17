@@ -271,6 +271,9 @@
 /* ---------- Scene Cards ---------- */
 
 .discovered-scenes-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
   font-family: var(--font-heading);
   font-size: 11px;
   font-weight: 600;
@@ -278,6 +281,50 @@
   text-transform: uppercase;
   color: var(--text-muted);
   margin-bottom: var(--spacing-sm);
+}
+
+.discovered-tabs {
+  display: flex;
+  gap: 4px;
+}
+
+.discovered-tab {
+  font-family: var(--font-heading);
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  padding: 5px 12px;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border-subtle);
+  color: var(--text-muted);
+  background: transparent;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.discovered-tab:hover {
+  color: var(--text-secondary);
+  border-color: var(--border-default);
+}
+
+.discovered-tab.active {
+  color: var(--accent);
+  border-color: var(--accent);
+  background: var(--accent-muted);
+}
+
+.discovered-tab-count {
+  font-weight: 700;
+  color: var(--accent);
+}
+
+.char-number {
+  background: var(--success) !important;
+}
+
+.env-number {
+  background: var(--warning) !important;
 }
 
 .discovered-scenes {
@@ -429,7 +476,7 @@
 
 .summary-stats {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(5, 1fr);
   gap: var(--spacing-md);
   margin-bottom: var(--spacing-xl);
 }
@@ -437,7 +484,7 @@
 .summary-stat {
   background: var(--bg-card);
   border: 1px solid var(--border-subtle);
-  padding: 24px 20px;
+  padding: 20px 16px;
   text-align: center;
   opacity: 0;
   animation: sceneSlideIn 0.4s ease forwards;
@@ -445,7 +492,7 @@
 
 .summary-stat-value {
   font-family: var(--font-heading);
-  font-size: 32px;
+  font-size: 26px;
   font-weight: 700;
   letter-spacing: -1px;
   color: var(--text-primary);

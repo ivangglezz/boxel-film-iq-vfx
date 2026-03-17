@@ -73,15 +73,29 @@
           <div class="phase-step" id="phase-3">
             <div class="phase-dot"></div>
             <div class="phase-info">
-              <span class="phase-label">Opportunity Detection</span>
+              <span class="phase-label">Character Detection</span>
               <span class="phase-counter" id="phase-3-counter"></span>
             </div>
           </div>
           <div class="phase-step" id="phase-4">
             <div class="phase-dot"></div>
             <div class="phase-info">
-              <span class="phase-label">Complete</span>
+              <span class="phase-label">Environment Detection</span>
               <span class="phase-counter" id="phase-4-counter"></span>
+            </div>
+          </div>
+          <div class="phase-step" id="phase-5">
+            <div class="phase-dot"></div>
+            <div class="phase-info">
+              <span class="phase-label">Opportunity Detection</span>
+              <span class="phase-counter" id="phase-5-counter"></span>
+            </div>
+          </div>
+          <div class="phase-step" id="phase-6">
+            <div class="phase-dot"></div>
+            <div class="phase-info">
+              <span class="phase-label">Complete</span>
+              <span class="phase-counter" id="phase-6-counter"></span>
             </div>
           </div>
         </div>
@@ -92,7 +106,14 @@
 
       <!-- Right: Scene Cards + Summary -->
       <div class="processing-right">
-        <div class="discovered-scenes-header" id="scenes-header" style="display:none;">Discovered Scenes</div>
+        <div class="discovered-scenes-header" id="scenes-header" style="display:none;">
+          <span>Discovered</span>
+          <div class="discovered-tabs" id="discovered-tabs">
+            <button class="discovered-tab active" data-tab="scenes">Scenes <span class="discovered-tab-count" id="tab-count-scenes">0</span></button>
+            <button class="discovered-tab" data-tab="characters">Chars <span class="discovered-tab-count" id="tab-count-characters">0</span></button>
+            <button class="discovered-tab" data-tab="environments">Envs <span class="discovered-tab-count" id="tab-count-environments">0</span></button>
+          </div>
+        </div>
         <div class="discovered-scenes" id="scenes-container"></div>
       </div>
     </div>

@@ -142,7 +142,7 @@
 
 .scene-card-thumb {
   width: 100%;
-  height: 100px;
+  aspect-ratio: 16 / 9;
   overflow: hidden;
   position: relative;
   flex-shrink: 0;
@@ -154,7 +154,8 @@
   left: 0;
   width: 100%;
   height: 100%;
-  object-fit: cover;
+  object-fit: contain;
+  background: var(--bg-card);
 }
 
 .scene-card-thumb-bg {
@@ -211,15 +212,105 @@
   color: var(--accent);
 }
 
-.scene-card-status {
-  width: 8px;
-  height: 8px;
-  border-radius: 50%;
-  background: var(--text-muted);
+/* Card stagger animation */
+@keyframes sidebarCardFadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
-.scene-card-status.approved { background: var(--success); }
-.scene-card-status.declined { background: var(--error); }
+.scene-card.scene-card-animate {
+  animation: sidebarCardFadeUp 0.35s ease-out both;
+}
+
+/* Remove/Restore button on cards */
+.scene-card {
+  position: relative;
+}
+
+.scene-card-remove {
+  position: absolute;
+  top: 6px;
+  right: 6px;
+  z-index: 10;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  border: none;
+  background: rgba(0, 0, 0, 0.7);
+  color: var(--text-secondary);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transition: opacity 0.2s, background 0.2s, color 0.2s;
+}
+
+.scene-card:hover .scene-card-remove {
+  opacity: 1;
+}
+
+.scene-card-remove:hover {
+  background: var(--error);
+  color: var(--text-primary);
+}
+
+.scene-card.removed .scene-card-remove {
+  opacity: 1;
+  background: rgba(255, 255, 255, 0.1);
+  color: var(--text-muted);
+}
+
+.scene-card.removed .scene-card-remove:hover {
+  background: var(--success);
+  color: var(--text-primary);
+}
+
+/* Removed card state */
+.scene-card.removed {
+  opacity: 0.4;
+  filter: grayscale(0.6);
+  border-color: transparent;
+}
+
+.scene-card.removed:hover {
+  opacity: 0.6;
+  border-color: var(--border);
+  box-shadow: none;
+  transform: none;
+}
+
+.scene-card.removed.active {
+  border-color: var(--border);
+  box-shadow: none;
+  transform: none;
+  opacity: 0.5;
+}
+
+/* Duration / info inline in meta */
+.scene-card-duration-inline {
+  font-family: var(--font-heading);
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 1px;
+  color: var(--text-muted);
+}
+
+.scene-card-duration-inline.role-lead { color: var(--accent); }
+.scene-card-duration-inline.role-supporting { color: var(--success); }
+.scene-card-duration-inline.role-minor { color: var(--text-muted); }
+
+.env-type-inline-sm {
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+}
 
 /* --- Right Content --- */
 .detail-content {
@@ -262,7 +353,79 @@
   gap: var(--spacing-sm);
 }
 
+.scene-detail-header-right {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+}
+
+.scene-detail-cost {
+  font-family: var(--font-heading);
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--accent);
+}
+
+.scene-detail-toggle {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  border: 1px solid var(--border-default);
+  background: transparent;
+  color: var(--text-secondary);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+}
+
+.scene-detail-toggle:hover {
+  border-color: var(--accent);
+  color: var(--text-primary);
+}
+
+.scene-detail-toggle svg {
+  transition: transform 0.2s ease;
+  transform: rotate(180deg);
+}
+
+.scene-detail-toggle.collapsed svg {
+  transform: rotate(0deg);
+}
+
 /* Editable field grid */
+.scene-fields-collapsible {
+  overflow: hidden;
+  max-height: 200px;
+  transition: max-height 0.4s cubic-bezier(0.4, 0, 0.2, 1),
+              opacity 0.35s ease,
+              margin 0.4s cubic-bezier(0.4, 0, 0.2, 1),
+              transform 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+  opacity: 1;
+  transform: translateY(0);
+  transform-origin: top;
+}
+
+.scene-fields-collapsible.collapsed {
+  max-height: 0;
+  opacity: 0;
+  margin-top: 0 !important;
+  margin-bottom: 0 !important;
+  transform: translateY(-8px);
+}
+
+.scene-fields-collapsible .scene-field {
+  transition: opacity 0.3s ease, transform 0.3s ease;
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.scene-fields-collapsible.collapsed .scene-field {
+  opacity: 0;
+  transform: translateY(-6px);
+}
+
 .scene-fields {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
@@ -437,6 +600,27 @@
   color: var(--accent);
 }
 
+.script-content:has(.preview-video-wrap),
+.script-content:has(.preview-placeholder) {
+  padding: 0;
+}
+
+.script-content:has(.preview-video-wrap) .info-panel,
+.script-content:has(.preview-placeholder) .info-panel {
+  padding: var(--spacing-xl);
+}
+
+.preview-video-wrap {
+  width: 100%;
+  background: #000;
+}
+
+.preview-video {
+  width: 100%;
+  display: block;
+  pointer-events: none;
+}
+
 .preview-placeholder {
   display: flex;
   flex-direction: column;
@@ -537,7 +721,7 @@
 }
 
 .opp-item-available .detail-list-item-name {
-  color: var(--text-muted);
+  color: var(--text-primary);
 }
 
 .opp-empty-msg {
@@ -774,17 +958,14 @@
 }
 
 .role-lead {
-  background: var(--accent-muted);
   color: var(--accent);
 }
 
 .role-supporting {
-  background: rgba(50, 213, 131, 0.15);
   color: var(--success);
 }
 
 .role-minor {
-  background: rgba(106, 120, 135, 0.2);
   color: var(--text-secondary);
 }
 

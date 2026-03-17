@@ -21,6 +21,8 @@ document.addEventListener('DOMContentLoaded', () => {
   // Use first project as the one being "analyzed"
   const project = projects[0];
   const scenes = project.scenes || [];
+  const characters = project.characters || [];
+  const environments = project.environments || [];
 
   // Set file badge
   document.getElementById('file-badge-name').textContent = uploadedFiles[0];
@@ -93,6 +95,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const card = document.createElement('div');
     card.className = 'scene-card';
     card.id = `scene-card-${index}`;
+    card.dataset.category = 'scenes';
     card.innerHTML = `
       <div class="scene-card-header">
         <span class="scene-number">SC ${String(index + 1).padStart(2, '0')}</span>
@@ -108,15 +111,68 @@ document.addEventListener('DOMContentLoaded', () => {
     return card;
   }
 
+  function createCharacterCard(character, index) {
+    const card = document.createElement('div');
+    card.className = 'scene-card';
+    card.id = `char-card-${index}`;
+    card.dataset.category = 'characters';
+    card.innerHTML = `
+      <div class="scene-card-header">
+        <span class="scene-number char-number">CH ${String(index + 1).padStart(2, '0')}</span>
+        <span class="scene-name">${character.name}</span>
+      </div>
+      <div class="scene-meta">
+        <span>${character.role || ''}</span>
+        <span>${character.sceneCount || 0} scenes</span>
+        <span class="complexity-badge">${character.vfxNeeded ? 'VFX' : 'NO VFX'}</span>
+      </div>
+      <div class="scene-opportunities" id="char-opps-${index}"></div>
+    `;
+    return card;
+  }
+
+  function createEnvironmentCard(env, index) {
+    const card = document.createElement('div');
+    card.className = 'scene-card';
+    card.id = `env-card-${index}`;
+    card.dataset.category = 'environments';
+    card.innerHTML = `
+      <div class="scene-card-header">
+        <span class="scene-number env-number">EN ${String(index + 1).padStart(2, '0')}</span>
+        <span class="scene-name">${env.name}</span>
+      </div>
+      <div class="scene-meta">
+        <span>${env.type || ''}</span>
+        <span>${env.vfxComplexity || ''}</span>
+      </div>
+      <div class="scene-opportunities" id="env-opps-${index}"></div>
+    `;
+    return card;
+  }
+
+  // Discovered panel tab switching
+  let activeDiscoveredTab = 'scenes';
+  function switchDiscoveredTab(tab) {
+    activeDiscoveredTab = tab;
+    document.querySelectorAll('.discovered-tab').forEach(t => {
+      t.classList.toggle('active', t.dataset.tab === tab);
+    });
+    document.querySelectorAll('#scenes-container .scene-card').forEach(card => {
+      card.style.display = card.dataset.category === tab ? '' : 'none';
+    });
+  }
+
   // ---- Phase orchestration ----
   async function runProcessing() {
     await phase1_scriptAnalysis();
     await phase2_sceneDetection();
-    await phase3_opportunities();
-    await phase4_summary();
+    await phase3_characterDetection();
+    await phase4_environmentDetection();
+    await phase5_opportunities();
+    await phase6_summary();
   }
 
-  // Phase 1: Script Analysis (0s - 4s)
+  // Phase 1: Script Analysis
   async function phase1_scriptAnalysis() {
     setPhase(1, 'active');
     updateProgress(0, 'Analyzing screenplay...');
@@ -129,13 +185,12 @@ document.addEventListener('DOMContentLoaded', () => {
       { text: '> Extracting dialogue and scene headings...', type: '' },
       { text: `> Found <strong>${scenes.length * 18} pages</strong>, <strong>${scenes.length} acts</strong>`, type: 'info' },
       { text: '> Screenplay format: Standard US format detected', type: '' },
-      { text: '> Character extraction complete — 12 principal characters identified', type: 'highlight' },
       { text: '> Scene structure analysis ready. Proceeding to detection...', type: 'success' },
     ];
 
     for (let i = 0; i < lines.length; i++) {
       addTerminalLine(lines[i].text, lines[i].type);
-      const progress = Math.round((i + 1) / lines.length * 25);
+      const progress = Math.round((i + 1) / lines.length * 15);
       updateProgress(progress, 'Analyzing screenplay...');
       await delay(450);
     }
@@ -143,15 +198,20 @@ document.addEventListener('DOMContentLoaded', () => {
     setPhase(1, 'complete');
   }
 
-  // Phase 2: Scene Detection (4s - 10s)
+  // Phase 2: Scene Detection
   async function phase2_sceneDetection() {
     setPhase(2, 'active');
-    updateProgress(25, 'Detecting scenes...');
+    updateProgress(15, 'Detecting scenes...');
 
     addTerminalLine('> Beginning scene detection pass...', '');
     await delay(400);
 
-    scenesHeader.style.display = 'block';
+    scenesHeader.style.display = 'flex';
+
+    // Bind tab clicks
+    document.querySelectorAll('.discovered-tab').forEach(tab => {
+      tab.addEventListener('click', () => switchDiscoveredTab(tab.dataset.tab));
+    });
 
     for (let i = 0; i < scenes.length; i++) {
       const scene = scenes[i];
@@ -166,41 +226,108 @@ document.addEventListener('DOMContentLoaded', () => {
       const card = createSceneCard(scene, i);
       scenesContainer.appendChild(card);
 
-      const progress = 25 + Math.round((i + 1) / scenes.length * 30);
+      const progress = 15 + Math.round((i + 1) / scenes.length * 20);
       updateProgress(progress, 'Detecting scenes...');
+      document.getElementById('tab-count-scenes').textContent = i + 1;
       setPhaseCounter(2, `Scenes found: <span class="count-value">${i + 1}</span>`);
 
       await delay(650);
     }
 
-    addTerminalLine(`> All <strong>${scenes.length} scenes</strong> identified successfully.`, 'success');
+    addTerminalLine(`> All <strong>${scenes.length} scenes</strong> identified.`, 'success');
     setPhase(2, 'complete');
     await delay(300);
   }
 
-  // Phase 3: Opportunity Detection (10s - 16s)
-  async function phase3_opportunities() {
+  // Phase 3: Character Detection
+  async function phase3_characterDetection() {
     setPhase(3, 'active');
+    updateProgress(35, 'Detecting characters...');
+
+    addTerminalLine('> Beginning character detection pass...', '');
+    await delay(400);
+
+    for (let i = 0; i < characters.length; i++) {
+      addTerminalLine(
+        `> Character ${i + 1} detected: "<strong>${characters[i].name}</strong>" [${characters[i].role}]`,
+        'highlight'
+      );
+
+      const card = createCharacterCard(characters[i], i);
+      card.style.display = activeDiscoveredTab === 'characters' ? '' : 'none';
+      scenesContainer.appendChild(card);
+
+      const progress = 35 + Math.round((i + 1) / characters.length * 10);
+      updateProgress(progress, 'Detecting characters...');
+      document.getElementById('tab-count-characters').textContent = i + 1;
+      setPhaseCounter(3, `Characters found: <span class="count-value">${i + 1}</span>`);
+
+      await delay(450);
+    }
+
+    addTerminalLine(`> All <strong>${characters.length} characters</strong> identified.`, 'success');
+    setPhase(3, 'complete');
+    await delay(300);
+  }
+
+  // Phase 4: Environment Detection
+  async function phase4_environmentDetection() {
+    setPhase(4, 'active');
+    updateProgress(45, 'Detecting environments...');
+
+    addTerminalLine('> Beginning environment detection pass...', '');
+    await delay(400);
+
+    for (let i = 0; i < environments.length; i++) {
+      addTerminalLine(
+        `> Environment ${i + 1} detected: "<strong>${environments[i].name}</strong>" [${environments[i].type}]`,
+        'highlight'
+      );
+
+      const card = createEnvironmentCard(environments[i], i);
+      card.style.display = activeDiscoveredTab === 'environments' ? '' : 'none';
+      scenesContainer.appendChild(card);
+
+      const progress = 45 + Math.round((i + 1) / environments.length * 10);
+      updateProgress(progress, 'Detecting environments...');
+      document.getElementById('tab-count-environments').textContent = i + 1;
+      setPhaseCounter(4, `Environments found: <span class="count-value">${i + 1}</span>`);
+
+      await delay(450);
+    }
+
+    addTerminalLine(`> All <strong>${environments.length} environments</strong> identified.`, 'success');
+    setPhase(4, 'complete');
+    await delay(300);
+  }
+
+  // Phase 5: Opportunity Detection
+  async function phase5_opportunities() {
+    setPhase(5, 'active');
     updateProgress(55, 'Detecting opportunities...');
 
-    addTerminalLine('> Scanning scenes for VFX/service opportunities...', '');
+    addTerminalLine('> Scanning all items for VFX/service opportunities...', '');
     await delay(400);
 
     let totalOpps = 0;
+    const allItems = [
+      ...scenes.map((s, i) => ({ item: s, type: 'Scene', prefix: 'scene', index: i })),
+      ...characters.map((c, i) => ({ item: c, type: 'Character', prefix: 'char', index: i })),
+      ...environments.map((e, i) => ({ item: e, type: 'Environment', prefix: 'env', index: i })),
+    ];
 
-    for (let i = 0; i < scenes.length; i++) {
-      const scene = scenes[i];
-      const selectedOpps = (scene.opportunityList || []).filter(o => o.selected);
-      const oppsContainer = document.getElementById(`scene-opps-${i}`);
+    for (let i = 0; i < allItems.length; i++) {
+      const { item, type, prefix, index } = allItems[i];
+      const selectedOpps = (item.opportunityList || []).filter(o => o.selected);
+      const oppsContainer = document.getElementById(`${prefix}-opps-${index}`);
 
       if (selectedOpps.length > 0) {
         const oppNames = selectedOpps.map(o => o.name).join(', ');
         addTerminalLine(
-          `> Scene ${i + 1}: Detected <strong>${selectedOpps.length}</strong> opportunities — ${oppNames}`,
+          `> ${type} ${index + 1}: Detected <strong>${selectedOpps.length}</strong> opportunities — ${oppNames}`,
           'highlight'
         );
 
-        // Add badges one by one with stagger
         for (let j = 0; j < selectedOpps.length; j++) {
           const badge = document.createElement('span');
           badge.className = 'scene-opp-badge';
@@ -210,32 +337,31 @@ document.addEventListener('DOMContentLoaded', () => {
           totalOpps++;
         }
 
-        // Show cost
-        if (scene.cost) {
+        if (item.cost) {
           const costEl = document.createElement('div');
           costEl.className = 'scene-cost';
-          costEl.innerHTML = `<span class="cost-label">Est. Cost</span>${formatCurrency(scene.cost)}`;
-          document.getElementById(`scene-card-${i}`).appendChild(costEl);
+          costEl.innerHTML = `<span class="cost-label">Est. Cost</span>${formatCurrency(item.cost)}`;
+          document.getElementById(`${prefix}-card-${index}`).appendChild(costEl);
         }
       } else {
-        addTerminalLine(`> Scene ${i + 1}: No VFX opportunities detected`, '');
+        addTerminalLine(`> ${type} ${index + 1}: No VFX opportunities detected`, '');
       }
 
-      setPhaseCounter(3, `Opportunities: <span class="count-value">${totalOpps}</span>`);
-      const progress = 55 + Math.round((i + 1) / scenes.length * 35);
+      setPhaseCounter(5, `Opportunities: <span class="count-value">${totalOpps}</span>`);
+      const progress = 55 + Math.round((i + 1) / allItems.length * 35);
       updateProgress(progress, 'Detecting opportunities...');
 
-      await delay(800);
+      await delay(600);
     }
 
-    addTerminalLine(`> Total: <strong>${totalOpps} opportunities</strong> across ${scenes.length} scenes.`, 'success');
-    setPhase(3, 'complete');
+    addTerminalLine(`> Total: <strong>${totalOpps} opportunities</strong> across ${allItems.length} items.`, 'success');
+    setPhase(5, 'complete');
     await delay(300);
   }
 
-  // Phase 4: Summary (16s - 18s)
-  async function phase4_summary() {
-    setPhase(4, 'active');
+  // Phase 6: Summary
+  async function phase6_summary() {
+    setPhase(6, 'active');
     updateProgress(92, 'Generating proposal...');
 
     addTerminalLine('> Calculating cost estimates...', '');
@@ -247,12 +373,13 @@ document.addEventListener('DOMContentLoaded', () => {
     addTerminalLine('> Analysis complete. Ready for review.', 'success');
 
     updateProgress(100, 'Analysis complete');
-    setPhase(4, 'complete');
-    setPhaseCounter(4, '<span class="count-value">Done</span>');
+    setPhase(6, 'complete');
+    setPhaseCounter(6, '<span class="count-value">Done</span>');
 
     // Show summary stats
-    const totalCost = scenes.reduce((sum, s) => sum + (s.cost || 0), 0);
-    const totalOpps = scenes.reduce((sum, s) => {
+    const allItemsForCost = [...scenes, ...characters, ...environments];
+    const totalCost = allItemsForCost.reduce((sum, s) => sum + (s.cost || 0), 0);
+    const totalOpps = allItemsForCost.reduce((sum, s) => {
       return sum + (s.opportunityList || []).filter(o => o.selected).length;
     }, 0);
 
@@ -261,11 +388,19 @@ document.addEventListener('DOMContentLoaded', () => {
         <div class="summary-stat-value">${scenes.length}</div>
         <div class="summary-stat-label">Scenes</div>
       </div>
-      <div class="summary-stat" style="animation-delay: 0.15s">
+      <div class="summary-stat" style="animation-delay: 0.1s">
+        <div class="summary-stat-value">${characters.length}</div>
+        <div class="summary-stat-label">Characters</div>
+      </div>
+      <div class="summary-stat" style="animation-delay: 0.2s">
+        <div class="summary-stat-value">${environments.length}</div>
+        <div class="summary-stat-label">Environments</div>
+      </div>
+      <div class="summary-stat" style="animation-delay: 0.3s">
         <div class="summary-stat-value">${totalOpps}</div>
         <div class="summary-stat-label">Opportunities</div>
       </div>
-      <div class="summary-stat" style="animation-delay: 0.3s">
+      <div class="summary-stat" style="animation-delay: 0.4s">
         <div class="summary-stat-value">${formatCurrency(totalCost)}</div>
         <div class="summary-stat-label">Estimated Budget</div>
       </div>

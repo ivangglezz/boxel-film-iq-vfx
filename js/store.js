@@ -132,8 +132,10 @@ const Store = {
         if (selectedOpps.length > 0) {
           item.cost = selectedOpps.reduce((sum, o) => sum + (o.amount || 0), 0);
         }
-        totalCost += item.cost || 0;
-        selectedOpps.forEach(o => oppSet.add(o.name));
+        if (!item.removed) {
+          totalCost += item.cost || 0;
+          selectedOpps.forEach(o => oppSet.add(o.name));
+        }
       });
     });
 

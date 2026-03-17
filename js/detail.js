@@ -29,8 +29,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
   let activeCategory = 'scenes';
   let activeItemId = project.scenes[0]?.id;
-  let activeTab = 'script';
+  let activeTab = 'preview';
   let scriptSceneIndex = 0;
+  let animateCards = true;
 
   renderAll();
 
@@ -146,7 +147,7 @@ document.addEventListener('DOMContentLoaded', () => {
             `;
           }).join('')}
         </div>
-        ${items.map((item, i) => renderItemCard(item, i, p)).join('')}
+        ${[...items].sort((a, b) => (a.removed ? 1 : 0) - (b.removed ? 1 : 0)).map((item, i) => renderItemCard(item, i, p)).join('')}
       </div>
     `;
   }
@@ -155,23 +156,31 @@ document.addEventListener('DOMContentLoaded', () => {
     const isActive = item.id === activeItemId;
     const gradientAngle = (i * 30 + 120) % 360;
     const colors = [p.gradientColors[0] || '#9375C0', p.gradientColors[1] || '#00EFD8'];
+    const animClass = animateCards ? 'scene-card-animate' : '';
+    const animStyle = animateCards ? `animation-delay:${Math.min(i * 0.05, 0.4)}s` : '';
+
 
     if (activeCategory === 'characters') {
       const initials = item.name.split(' ').map(w => w[0]).join('').slice(0, 2).toUpperCase();
       const roleClass = item.role === 'Lead' ? 'role-lead' : item.role === 'Supporting' ? 'role-supporting' : 'role-minor';
       return `
-        <div class="scene-card ${isActive ? 'active' : ''}" data-item-id="${item.id}">
-          <div class="scene-card-thumb char-card-thumb">
-            <div class="char-avatar" style="background: linear-gradient(${gradientAngle}deg, ${colors[0]}, ${colors[1]})">
-              ${initials}
-            </div>
-            <span class="scene-card-duration role-badge ${roleClass}">${item.role}</span>
+        <div class="scene-card ${animClass} ${isActive ? 'active' : ''} ${item.removed ? 'removed' : ''}" data-item-id="${item.id}" style="${animStyle}">
+          <button class="scene-card-remove" data-item-id="${item.id}" title="${item.removed ? 'Restore' : 'Remove'}">
+            ${item.removed
+              ? '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>'
+              : '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>'}
+          </button>
+          <div class="scene-card-thumb ${item.thumbnail ? '' : 'char-card-thumb'}">
+            ${item.thumbnail
+              ? `<img class="scene-card-thumb-img" src="${item.thumbnail}" alt="${item.name}">`
+              : `<div class="char-avatar" style="background: linear-gradient(${gradientAngle}deg, ${colors[0]}, ${colors[1]})">${initials}</div>`
+            }
           </div>
           <div class="scene-card-info">
             <span class="scene-card-name">${item.name}</span>
             <div class="scene-card-meta">
               <span class="scene-card-cost">${formatCurrency(item.cost)}</span>
-              <span class="scene-card-status ${item.status}"></span>
+              <span class="scene-card-duration-inline ${roleClass}">${item.role}</span>
             </div>
           </div>
         </div>
@@ -181,16 +190,20 @@ document.addEventListener('DOMContentLoaded', () => {
     if (activeCategory === 'environments') {
       const typeClass = item.type === 'EXT' ? 'env-ext' : item.type === 'INT/EXT' ? 'env-mixed' : 'env-int';
       return `
-        <div class="scene-card ${isActive ? 'active' : ''}" data-item-id="${item.id}">
-          <div class="scene-card-thumb env-card-thumb" style="background: linear-gradient(${gradientAngle}deg, ${colors[0]}44, ${colors[1]}44)">
-            <span class="env-type-badge ${typeClass}">${item.type}</span>
-            <span class="env-complexity-badge">${item.vfxComplexity}</span>
+        <div class="scene-card ${animClass} ${isActive ? 'active' : ''} ${item.removed ? 'removed' : ''}" data-item-id="${item.id}" style="${animStyle}">
+          <button class="scene-card-remove" data-item-id="${item.id}" title="${item.removed ? 'Restore' : 'Remove'}">
+            ${item.removed
+              ? '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>'
+              : '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>'}
+          </button>
+          <div class="scene-card-thumb ${item.thumbnail ? '' : 'env-card-thumb'}" ${!item.thumbnail ? `style="background: linear-gradient(${gradientAngle}deg, ${colors[0]}44, ${colors[1]}44)"` : ''}>
+            ${item.thumbnail ? `<img class="scene-card-thumb-img" src="${item.thumbnail}" alt="${item.name}">` : ''}
           </div>
           <div class="scene-card-info">
             <span class="scene-card-name">${item.name}</span>
             <div class="scene-card-meta">
               <span class="scene-card-cost">${formatCurrency(item.cost)}</span>
-              <span class="scene-card-status ${item.status}"></span>
+              <span class="scene-card-duration-inline"><span class="env-type-inline-sm ${typeClass}">${item.type}</span> ${item.vfxComplexity}</span>
             </div>
           </div>
         </div>
@@ -199,17 +212,21 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Default: scenes
     return `
-      <div class="scene-card ${isActive ? 'active' : ''}" data-item-id="${item.id}">
+      <div class="scene-card ${animClass} ${isActive ? 'active' : ''} ${item.removed ? 'removed' : ''}" data-item-id="${item.id}" style="${animStyle}">
+        <button class="scene-card-remove" data-item-id="${item.id}" title="${item.removed ? 'Restore' : 'Remove'}">
+          ${item.removed
+            ? '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>'
+            : '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>'}
+        </button>
         <div class="scene-card-thumb">
-          ${p.thumbnail ? `<img class="scene-card-thumb-img" src="${p.thumbnail}" alt="${item.name}">` : ''}
+          ${(item.thumbnail || p.thumbnail) ? `<img class="scene-card-thumb-img" src="${item.thumbnail || p.thumbnail}" alt="${item.name}">` : ''}
           <div class="scene-card-thumb-bg" style="background: linear-gradient(${gradientAngle}deg, ${colors[0]}44, ${colors[1]}44)"></div>
-          <span class="scene-card-duration">${item.duration}</span>
         </div>
         <div class="scene-card-info">
           <span class="scene-card-name">${item.name}</span>
           <div class="scene-card-meta">
             <span class="scene-card-cost">${formatCurrency(item.cost)}</span>
-            <span class="scene-card-status ${item.status}"></span>
+            <span class="scene-card-duration-inline">${item.duration}</span>
           </div>
         </div>
       </div>
@@ -224,12 +241,6 @@ document.addEventListener('DOMContentLoaded', () => {
   function renderItemDetail(p) {
     const item = getActiveItem(p);
     if (!item) return '<div class="scene-detail"></div>';
-
-    const statusBadge = item.status === 'approved'
-      ? '<span class="badge badge-success">APPROVED</span>'
-      : item.status === 'declined'
-      ? '<span class="badge badge-error">DECLINED</span>'
-      : '<span class="badge">PENDING</span>';
 
     const catLabel = CATEGORY_LABELS[activeCategory].singular;
 
@@ -253,16 +264,8 @@ document.addEventListener('DOMContentLoaded', () => {
           <div class="scene-field-value editable" data-field="estimatedLength" data-type="text" data-item-id="${item.id}">${item.estimatedLength}</div>
         </div>
         <div class="scene-field">
-          <span class="scene-field-label">COST</span>
-          <div class="scene-field-value cost-field">${formatCurrency(item.cost)}</div>
-        </div>
-        <div class="scene-field">
           <span class="scene-field-label">DURATION</span>
           <div class="scene-field-value editable" data-field="duration" data-type="text" data-item-id="${item.id}">${item.duration}</div>
-        </div>
-        <div class="scene-field">
-          <span class="scene-field-label">STATUS</span>
-          <div class="scene-field-value">${item.status.charAt(0).toUpperCase() + item.status.slice(1)}</div>
         </div>
       `;
     } else if (activeCategory === 'characters') {
@@ -283,14 +286,6 @@ document.addEventListener('DOMContentLoaded', () => {
           <span class="scene-field-label">VFX NEEDED</span>
           <div class="scene-field-value">${item.vfxNeeded ? '<span style="color:var(--success)">Yes</span>' : '<span style="color:var(--text-muted)">No</span>'}</div>
         </div>
-        <div class="scene-field">
-          <span class="scene-field-label">COST</span>
-          <div class="scene-field-value cost-field">${formatCurrency(item.cost)}</div>
-        </div>
-        <div class="scene-field">
-          <span class="scene-field-label">STATUS</span>
-          <div class="scene-field-value">${item.status.charAt(0).toUpperCase() + item.status.slice(1)}</div>
-        </div>
       `;
     } else if (activeCategory === 'environments') {
       fieldsHtml = `
@@ -306,36 +301,25 @@ document.addEventListener('DOMContentLoaded', () => {
           <span class="scene-field-label">VFX COMPLEXITY</span>
           <div class="scene-field-value">${item.vfxComplexity}</div>
         </div>
-        <div class="scene-field">
-          <span class="scene-field-label">COST</span>
-          <div class="scene-field-value cost-field">${formatCurrency(item.cost)}</div>
-        </div>
-        <div class="scene-field">
-          <span class="scene-field-label">STATUS</span>
-          <div class="scene-field-value">${item.status.charAt(0).toUpperCase() + item.status.slice(1)}</div>
-        </div>
       `;
     }
+
+    const fieldsCount = activeCategory === 'scenes' ? 5 : activeCategory === 'characters' ? 4 : 3;
 
     return `
       <div class="scene-detail">
         <div class="scene-detail-header">
           <div class="scene-detail-title-wrap">
             <h2 class="scene-detail-title editable-text" data-field="name" data-item-id="${item.id}">${item.name}</h2>
-            ${statusBadge}
           </div>
-          <div class="scene-detail-actions">
-            <button class="btn btn-success btn-sm scene-action" data-action="approved" data-item-id="${item.id}" ${item.status === 'approved' ? 'disabled style="opacity:0.5"' : ''}>
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20,6 9,17 4,12"/></svg>
-              APPROVE
-            </button>
-            <button class="btn btn-error btn-sm scene-action" data-action="declined" data-item-id="${item.id}" ${item.status === 'declined' ? 'disabled style="opacity:0.5"' : ''}>
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
-              DECLINE
+          <div class="scene-detail-header-right">
+            <span class="scene-detail-cost">${formatCurrency(item.cost)}</span>
+            <button class="scene-detail-toggle collapsed" title="Toggle details">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6,9 12,15 18,9"/></svg>
             </button>
           </div>
         </div>
-        <div class="scene-fields">
+        <div class="scene-fields scene-fields-collapsible collapsed" style="grid-template-columns: repeat(${fieldsCount}, 1fr)">
           ${fieldsHtml}
         </div>
       </div>
@@ -389,21 +373,39 @@ document.addEventListener('DOMContentLoaded', () => {
     return `
       <div class="script-viewer">
         <div class="script-tabs">
-          <button class="script-tab ${activeTab === 'script' ? 'active' : ''}" data-tab="script">SCRIPT</button>
           <button class="script-tab ${activeTab === 'preview' ? 'active' : ''}" data-tab="preview">PREVIEW</button>
+          <button class="script-tab ${activeTab === 'script' ? 'active' : ''}" data-tab="script">SCRIPT</button>
         </div>
         <div class="script-content">
           ${activeTab === 'script' ? `
             <div class="script-text">${scriptBody}</div>
           ` : `
-            <div class="preview-placeholder">
-              <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round">
-                <rect x="2" y="3" width="20" height="14" rx="2" ry="2"/>
-                <line x1="8" y1="21" x2="16" y2="21"/>
-                <line x1="12" y1="17" x2="12" y2="21"/>
-              </svg>
-              <span class="label">STORYBOARD PREVIEW</span>
-              <span class="body-sm">Visual preview will be available after scene rendering</span>
+            ${item.preview ? `
+              <div class="preview-video-wrap">
+                <video class="preview-video" src="${item.preview}" autoplay loop muted playsinline></video>
+              </div>
+            ` : `
+              <div class="preview-placeholder">
+                <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round">
+                  <rect x="2" y="3" width="20" height="14" rx="2" ry="2"/>
+                  <line x1="8" y1="21" x2="16" y2="21"/>
+                  <line x1="12" y1="17" x2="12" y2="21"/>
+                </svg>
+                <span class="label">STORYBOARD PREVIEW</span>
+                <span class="body-sm">Visual preview will be available after scene rendering</span>
+              </div>
+            `}
+            <div class="info-panel">
+              ${item.description ? `
+              <div class="info-panel-section">
+                <h5 class="info-panel-label">Description</h5>
+                <p class="info-panel-text">${escapeHtml(item.description)}</p>
+              </div>` : ''}
+              ${item.vfxNotes ? `
+              <div class="info-panel-section">
+                <h5 class="info-panel-label">VFX Notes</h5>
+                <p class="info-panel-text">${escapeHtml(item.vfxNotes)}</p>
+              </div>` : ''}
             </div>
           `}
         </div>
@@ -582,10 +584,28 @@ document.addEventListener('DOMContentLoaded', () => {
           const freshProject = Store.getProject(projectId);
           const items = freshProject[activeCategory] || [];
           activeItemId = items[0]?.id;
-          activeTab = activeCategory === 'scenes' ? 'script' : 'details';
+          activeTab = activeCategory === 'scenes' ? 'preview' : 'details';
           scriptSceneIndex = 0;
+          animateCards = true;
           renderAll();
         }
+      });
+    });
+
+    // Remove/Restore card buttons
+    document.querySelectorAll('.scene-card-remove').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const itemId = btn.dataset.itemId;
+        const item = Store.getItem(projectId, activeCategory, itemId);
+        const newRemoved = !item.removed;
+        Store.updateItem(projectId, activeCategory, itemId, { removed: newRemoved });
+        showToast(
+          `${CATEGORY_LABELS[activeCategory].singular} ${newRemoved ? 'removed' : 'restored'}`,
+          newRemoved ? 'error' : 'success'
+        );
+        animateCards = false;
+        renderAll();
       });
     });
 
@@ -594,6 +614,7 @@ document.addEventListener('DOMContentLoaded', () => {
       card.addEventListener('click', () => {
         activeItemId = card.dataset.itemId;
         scriptSceneIndex = 0;
+        animateCards = false;
         renderAll();
       });
     });
@@ -637,16 +658,17 @@ document.addEventListener('DOMContentLoaded', () => {
       });
     });
 
-    // Approve / Decline
-    document.querySelectorAll('.scene-action').forEach(btn => {
-      btn.addEventListener('click', () => {
-        const itemId = btn.dataset.itemId;
-        const action = btn.dataset.action;
-        Store.updateItem(projectId, activeCategory, itemId, { status: action });
-        showToast(`${CATEGORY_LABELS[activeCategory].singular} ${action}`, action === 'approved' ? 'success' : 'error');
-        renderAll();
+    // Toggle detail fields
+    const toggleBtn = document.querySelector('.scene-detail-toggle');
+    if (toggleBtn) {
+      toggleBtn.addEventListener('click', () => {
+        const fields = document.querySelector('.scene-fields-collapsible');
+        if (fields) {
+          fields.classList.toggle('collapsed');
+          toggleBtn.classList.toggle('collapsed');
+        }
       });
-    });
+    }
 
     // Click-to-edit fields
     document.querySelectorAll('.editable').forEach(el => {
