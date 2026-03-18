@@ -252,26 +252,6 @@ const SEED_DATA = {
       ],
       characters: [
         {
-          id: "ms-char-1",
-          name: "Kermit the Frog",
-          thumbnail: "images/characters/kermitTheFrog_thumb.webp",
-          role: "Lead",
-          description: "The heart and soul of the Muppet Theater. Green-skinned frog who serves as host, stage manager, and occasional performer. Optimistic but constantly stressed by backstage chaos.",
-          sceneCount: 8,
-          sceneIds: ["ms-scene-1", "ms-scene-2", "ms-scene-3", "ms-scene-5", "ms-scene-6", "ms-scene-7", "ms-scene-8"],
-          vfxNeeded: true,
-          vfxNotes: "Full CG puppet for wide shots and flying sequences. Lip sync refinement for musical numbers. Wire removal for puppeteer rigs.",
-          opportunityList: [
-            { name: "CG Asset", selected: true, amount: 22000 },
-            { name: "Character Animation", selected: true, amount: 18000 },
-            { name: "2D Comp", selected: true, amount: 12000 },
-            { name: "Rig", selected: true, amount: 15000 },
-            { name: "Character Design", selected: false, amount: 0 }
-          ],
-          cost: 67000,
-          status: "pending"
-        },
-        {
           id: "ms-char-2",
           name: "Miss Piggy",
           thumbnail: "images/characters/missPiggy_thumb.webp",
@@ -290,6 +270,26 @@ const SEED_DATA = {
             { name: "2D Comp", selected: false, amount: 0 }
           ],
           cost: 56000,
+          status: "pending"
+        },
+        {
+          id: "ms-char-1",
+          name: "Kermit the Frog",
+          thumbnail: "images/characters/kermitTheFrog_thumb.webp",
+          role: "Lead",
+          description: "The heart and soul of the Muppet Theater. Green-skinned frog who serves as host, stage manager, and occasional performer. Optimistic but constantly stressed by backstage chaos.",
+          sceneCount: 8,
+          sceneIds: ["ms-scene-1", "ms-scene-2", "ms-scene-3", "ms-scene-5", "ms-scene-6", "ms-scene-7", "ms-scene-8"],
+          vfxNeeded: true,
+          vfxNotes: "Full CG puppet for wide shots and flying sequences. Lip sync refinement for musical numbers. Wire removal for puppeteer rigs.",
+          opportunityList: [
+            { name: "CG Asset", selected: true, amount: 22000 },
+            { name: "Character Animation", selected: true, amount: 18000 },
+            { name: "2D Comp", selected: true, amount: 12000 },
+            { name: "Rig", selected: true, amount: 15000 },
+            { name: "Character Design", selected: false, amount: 0 }
+          ],
+          cost: 67000,
           status: "pending"
         },
         {
