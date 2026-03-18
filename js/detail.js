@@ -432,6 +432,11 @@ document.addEventListener('DOMContentLoaded', () => {
           ${activeTab === 'script' ? `
             <div class="script-text">${renderScriptBody(p, sceneIds, currentSceneId)}</div>
           ` : `
+          ${item.preview ? `
+            <div class="preview-video-wrap">
+              <video class="preview-video" src="${item.preview}" autoplay loop muted playsinline></video>
+            </div>
+          ` : ''}
           <div class="info-panel">
             <div class="info-panel-section">
               <h5 class="info-panel-label">Description</h5>
@@ -559,7 +564,7 @@ document.addEventListener('DOMContentLoaded', () => {
         </div>
         ${available.length > 0 ? `
         <div class="detail-list opp-available">
-          <h4>Available</h4>
+          <h4>Services</h4>
           ${available.map(o => `
             <div class="detail-list-item opp-item opp-item-available" data-item-id="${item.id}" data-opp-index="${o._index}">
               <button class="opp-add-btn" title="Add">

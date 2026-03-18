@@ -275,6 +275,7 @@ const SEED_DATA = {
           id: "ms-char-2",
           name: "Miss Piggy",
           thumbnail: "images/characters/missPiggy_thumb.webp",
+          preview: "images/characters/missPiggy.mp4",
           role: "Lead",
           description: "Glamorous, larger-than-life diva pig. Demands the spotlight and resorts to karate chops when crossed. Secretly insecure beneath the bravado.",
           sceneCount: 6,
