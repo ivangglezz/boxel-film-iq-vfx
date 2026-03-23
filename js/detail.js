@@ -539,15 +539,23 @@ document.addEventListener('DOMContentLoaded', () => {
           <h4>Opportunities (${selectedCount}/${oppList.length})</h4>
           ${selected.length === 0 ? '<p class="opp-empty-msg">No opportunities added</p>' : ''}
           ${selected.map(o => `
-            <div class="detail-list-item opp-item" data-item-id="${item.id}" data-opp-index="${o._index}">
-              <button class="opp-remove-btn" title="Remove">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/></svg>
-              </button>
-              <span class="detail-list-item-name">${o.name}${o.custom ? '<span class="opp-custom-badge">CUSTOM</span>' : ''}</span>
-              <span class="opp-amount-wrap">
-                <span class="opp-amount-label">$</span>
-                <input type="text" class="opp-amount-input" value="${formatNumber(o.amount)}" data-item-id="${item.id}" data-opp-index="${o._index}">
-              </span>
+            <div class="opp-item-wrapper" data-item-id="${item.id}" data-opp-index="${o._index}">
+              <div class="detail-list-item opp-item" data-item-id="${item.id}" data-opp-index="${o._index}">
+                <button class="opp-remove-btn" title="Remove">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                </button>
+                <span class="detail-list-item-name">${o.name}${o.custom ? '<span class="opp-custom-badge">CUSTOM</span>' : ''}</span>
+                <span class="opp-amount-wrap">
+                  <span class="opp-amount-label">$</span>
+                  <input type="text" class="opp-amount-input" value="${formatNumber(o.amount)}" data-item-id="${item.id}" data-opp-index="${o._index}">
+                </span>
+                <button class="opp-notes-toggle${o.notes ? ' has-notes' : ''}" title="Toggle notes">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+                </button>
+              </div>
+              <div class="opp-notes-panel collapsed">
+                <textarea class="opp-notes-textarea" placeholder="Add notes for this opportunity..." data-item-id="${item.id}" data-opp-index="${o._index}" rows="3">${escapeHtml(o.notes || '')}</textarea>
+              </div>
             </div>
           `).join('')}
           <div class="opp-total-row">
@@ -722,6 +730,34 @@ document.addEventListener('DOMContentLoaded', () => {
         oppList[oppIndex] = { ...oppList[oppIndex], amount: parseFormattedNumber(input.value) };
         Store.updateItem(projectId, activeCategory, itemId, { opportunityList: oppList });
         renderAll('opportunities');
+      });
+    });
+
+    // Opportunity notes toggle
+    document.querySelectorAll('.opp-notes-toggle').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const wrapper = btn.closest('.opp-item-wrapper');
+        const panel = wrapper.querySelector('.opp-notes-panel');
+        panel.classList.toggle('collapsed');
+        btn.classList.toggle('active');
+        if (!panel.classList.contains('collapsed')) {
+          const textarea = panel.querySelector('.opp-notes-textarea');
+          if (textarea) textarea.focus();
+        }
+      });
+    });
+
+    // Opportunity notes auto-save
+    document.querySelectorAll('.opp-notes-textarea').forEach(textarea => {
+      textarea.addEventListener('click', (e) => e.stopPropagation());
+      textarea.addEventListener('blur', () => {
+        const itemId = textarea.dataset.itemId;
+        const oppIndex = parseInt(textarea.dataset.oppIndex);
+        const item = Store.getItem(projectId, activeCategory, itemId);
+        const oppList = [...item.opportunityList];
+        oppList[oppIndex] = { ...oppList[oppIndex], notes: textarea.value };
+        Store.updateItem(projectId, activeCategory, itemId, { opportunityList: oppList });
       });
     });
 

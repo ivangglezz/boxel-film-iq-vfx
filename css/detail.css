@@ -881,6 +881,88 @@
   vertical-align: middle;
 }
 
+/* Opportunity notes expand */
+.opp-item-wrapper {
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+.opp-item-wrapper:last-child {
+  border-bottom: none;
+}
+
+.opp-item-wrapper .opp-item {
+  border-bottom: none;
+}
+
+.opp-notes-toggle {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  border: 1px solid var(--border-subtle);
+  background: transparent;
+  cursor: pointer;
+  flex-shrink: 0;
+  transition: all 0.15s ease;
+  color: var(--text-muted);
+  margin-left: var(--spacing-xs);
+}
+
+.opp-notes-toggle:hover,
+.opp-notes-toggle.active {
+  border-color: var(--accent);
+  color: var(--accent);
+  background: rgba(147, 117, 192, 0.1);
+}
+
+.opp-notes-toggle.has-notes {
+  border-color: var(--text-primary);
+  color: var(--text-primary);
+}
+
+.opp-notes-panel {
+  overflow: hidden;
+  max-height: 150px;
+  transition: max-height 0.35s cubic-bezier(0.4, 0, 0.2, 1),
+              opacity 0.3s ease,
+              padding 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+  opacity: 1;
+  padding: 0 0 var(--spacing-sm) 34px;
+}
+
+.opp-notes-panel.collapsed {
+  max-height: 0;
+  opacity: 0;
+  padding-top: 0;
+  padding-bottom: 0;
+}
+
+.opp-notes-textarea {
+  width: 100%;
+  min-height: 60px;
+  max-height: 120px;
+  resize: vertical;
+  font-size: 12px;
+  line-height: 1.5;
+  padding: var(--spacing-sm) var(--spacing-md);
+  background: var(--bg-elevated);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-sm);
+  color: var(--text-secondary);
+  font-family: var(--font-body);
+}
+
+.opp-notes-textarea:focus {
+  border-color: var(--accent);
+  color: var(--text-primary);
+}
+
+.opp-notes-textarea::placeholder {
+  color: var(--text-muted);
+}
+
 /* ==========================================================================
    Category Tabs (Sidebar)
    ========================================================================== */
