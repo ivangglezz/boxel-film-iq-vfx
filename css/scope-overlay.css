@@ -1,0 +1,528 @@
+/* ==========================================================================
+   Scope Overlay — Interactive Scope Document
+   FAB (bottom-left) + Right Panel with collapsible requirements
+   ========================================================================== */
+
+/* ---------- Visibility Toggle ---------- */
+
+body:not(.scope-mode-enabled) .scope-fab,
+body:not(.scope-mode-enabled) .scope-panel {
+  display: none !important;
+}
+
+/* ---------- FAB Button (Bottom-Left) ---------- */
+
+.scope-fab {
+  position: fixed;
+  bottom: 24px;
+  left: 24px;
+  z-index: 5000;
+  width: 56px;
+  height: 56px;
+  border-radius: var(--radius-pill);
+  background: var(--accent);
+  color: var(--text-on-accent);
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 20px rgba(147, 117, 192, 0.35);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.scope-fab:hover {
+  background: var(--accent-hover);
+  transform: scale(1.08);
+  box-shadow: 0 6px 28px rgba(147, 117, 192, 0.45);
+}
+
+.scope-fab svg {
+  width: 24px;
+  height: 24px;
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.scope-fab.active svg.scope-fab-icon-open {
+  display: none;
+}
+
+.scope-fab.active svg.scope-fab-icon-close {
+  display: block;
+}
+
+.scope-fab:not(.active) svg.scope-fab-icon-open {
+  display: block;
+}
+
+.scope-fab:not(.active) svg.scope-fab-icon-close {
+  display: none;
+}
+
+/* ---------- Right Panel ---------- */
+
+.scope-panel {
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  width: 420px;
+  z-index: 5001;
+  background: var(--bg-card);
+  border-left: 1px solid var(--border-default);
+  transform: translateX(100%);
+  transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  box-shadow: -8px 0 40px rgba(0, 0, 0, 0.5), -2px 0 12px rgba(0, 0, 0, 0.3);
+}
+
+.scope-panel.active {
+  transform: translateX(0);
+}
+
+/* ---------- Panel Header ---------- */
+
+.scope-panel-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 20px 20px;
+  height: 56px;
+  border-bottom: 1px solid var(--border-default);
+  flex-shrink: 0;
+  background: var(--bg-elevated);
+}
+
+.scope-panel-title {
+  font-family: var(--font-heading);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin: 0;
+}
+
+.scope-panel-close {
+  width: 32px;
+  height: 32px;
+  border-radius: var(--radius-pill);
+  border: 1px solid var(--border-default);
+  background: transparent;
+  color: var(--text-secondary);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+}
+
+.scope-panel-close:hover {
+  border-color: var(--accent);
+  color: var(--text-primary);
+  background: var(--accent-muted);
+}
+
+/* ---------- Panel Body (Scrollable) ---------- */
+
+.scope-panel-body {
+  flex: 1;
+  overflow-y: auto;
+  padding: 12px 0;
+}
+
+.scope-panel-body::-webkit-scrollbar {
+  width: 4px;
+}
+
+.scope-panel-body::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.scope-panel-body::-webkit-scrollbar-thumb {
+  background: var(--border-strong);
+  border-radius: 2px;
+}
+
+/* ---------- Collapsible Groups ---------- */
+
+.scope-group {
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+.scope-group:last-child {
+  border-bottom: none;
+}
+
+.scope-group-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 14px 20px;
+  cursor: pointer;
+  transition: background 0.2s ease;
+  user-select: none;
+}
+
+.scope-group-header:hover {
+  background: var(--bg-elevated);
+}
+
+.scope-group-chevron {
+  width: 16px;
+  height: 16px;
+  color: var(--text-muted);
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  flex-shrink: 0;
+}
+
+.scope-group.expanded .scope-group-chevron {
+  transform: rotate(90deg);
+}
+
+.scope-group-title {
+  font-family: var(--font-heading);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--text-secondary);
+  flex: 1;
+}
+
+.scope-group-count {
+  font-family: var(--font-body);
+  font-size: 11px;
+  color: var(--text-muted);
+  background: var(--bg-elevated);
+  padding: 2px 8px;
+  border-radius: var(--radius-pill);
+}
+
+.scope-group-content {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.scope-group.expanded .scope-group-content {
+  /* max-height set by JS */
+}
+
+/* ---------- Requirement Items ---------- */
+
+.scope-item {
+  padding: 12px 20px 12px 46px;
+  border-left: 3px solid var(--accent);
+  margin: 0 12px 0 20px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+.scope-item:last-child {
+  border-bottom: none;
+}
+
+.scope-item:hover {
+  background: var(--bg-elevated);
+}
+
+.scope-item.active {
+  background: var(--accent-muted);
+  border-left-color: var(--accent-hover);
+}
+
+.scope-item-title {
+  font-family: var(--font-heading);
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: 4px;
+  letter-spacing: 0.3px;
+}
+
+.scope-item-desc {
+  font-family: var(--font-body);
+  font-size: 12px;
+  color: var(--text-secondary);
+  line-height: 1.5;
+  margin: 0;
+}
+
+/* ---------- Out of Scope Group Styling ---------- */
+
+.scope-group-oos .scope-group-title {
+  color: var(--text-muted);
+}
+
+.scope-group-oos .scope-item {
+  border-left-color: var(--border-strong);
+  cursor: default;
+  opacity: 0.7;
+}
+
+.scope-group-oos .scope-item:hover {
+  background: transparent;
+}
+
+.scope-group-oos .scope-item-title {
+  color: var(--text-secondary);
+  text-decoration: line-through;
+  text-decoration-color: var(--text-muted);
+}
+
+.scope-group-oos .scope-item-desc {
+  color: var(--text-muted);
+}
+
+/* ---------- Panel Footer ---------- */
+
+.scope-panel-footer {
+  flex-shrink: 0;
+  padding: 12px 20px;
+  border-top: 1px solid var(--border-default);
+  background: var(--bg-elevated);
+}
+
+.scope-fullview-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  width: 100%;
+  padding: 10px 16px;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border-default);
+  background: transparent;
+  color: var(--text-secondary);
+  font-family: var(--font-heading);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.scope-fullview-btn:hover {
+  border-color: var(--accent);
+  color: var(--text-primary);
+  background: var(--accent-muted);
+}
+
+.scope-fullview-btn svg {
+  width: 16px;
+  height: 16px;
+  flex-shrink: 0;
+}
+
+/* ---------- Full-Page Requirements View ---------- */
+
+.scope-fullview-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 6000;
+  background: var(--bg-primary);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.35s ease;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.scope-fullview-overlay.active {
+  opacity: 1;
+  pointer-events: all;
+}
+
+.scope-fullview-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 40px;
+  height: 64px;
+  flex-shrink: 0;
+  border-bottom: 1px solid var(--border-default);
+  background: var(--bg-card);
+}
+
+.scope-fullview-header-left {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.scope-fullview-header-icon {
+  width: 20px;
+  height: 20px;
+  color: var(--accent);
+}
+
+.scope-fullview-title {
+  font-family: var(--font-heading);
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 2.5px;
+  text-transform: uppercase;
+  color: var(--text-primary);
+  margin: 0;
+}
+
+.scope-fullview-close {
+  width: 36px;
+  height: 36px;
+  border-radius: var(--radius-pill);
+  border: 1px solid var(--border-default);
+  background: transparent;
+  color: var(--text-secondary);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+}
+
+.scope-fullview-close:hover {
+  border-color: var(--accent);
+  color: var(--text-primary);
+  background: var(--accent-muted);
+}
+
+.scope-fullview-body {
+  flex: 1;
+  overflow-y: auto;
+  padding: 48px 0;
+}
+
+.scope-fullview-body::-webkit-scrollbar {
+  width: 6px;
+}
+
+.scope-fullview-body::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.scope-fullview-body::-webkit-scrollbar-thumb {
+  background: var(--border-strong);
+  border-radius: 3px;
+}
+
+.scope-fullview-container {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 0 40px;
+}
+
+/* Page section */
+.scope-fv-page {
+  margin-bottom: 56px;
+}
+
+.scope-fv-page:last-child {
+  margin-bottom: 0;
+}
+
+.scope-fv-page-title {
+  font-family: var(--font-heading);
+  font-size: 18px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  color: var(--text-primary);
+  margin: 0 0 8px 0;
+  padding-bottom: 12px;
+  border-bottom: 2px solid var(--accent);
+  display: inline-block;
+}
+
+/* Group inside fullview */
+.scope-fv-group {
+  margin-top: 28px;
+}
+
+.scope-fv-group-title {
+  font-family: var(--font-heading);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 2.5px;
+  text-transform: uppercase;
+  color: var(--text-secondary);
+  margin: 0 0 16px 0;
+}
+
+.scope-fv-group-oos .scope-fv-group-title {
+  color: var(--text-muted);
+}
+
+/* Item inside fullview */
+.scope-fv-item {
+  padding: 12px 0 12px 20px;
+  border-left: 3px solid var(--accent);
+  margin-bottom: 8px;
+}
+
+.scope-fv-group-oos .scope-fv-item {
+  border-left-color: var(--border-strong);
+  opacity: 0.6;
+}
+
+.scope-fv-item-title {
+  font-family: var(--font-heading);
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: 4px;
+}
+
+.scope-fv-group-oos .scope-fv-item-title {
+  color: var(--text-secondary);
+  text-decoration: line-through;
+  text-decoration-color: var(--text-muted);
+}
+
+.scope-fv-item-desc {
+  font-family: var(--font-body);
+  font-size: 13px;
+  color: var(--text-secondary);
+  line-height: 1.6;
+  margin: 0;
+}
+
+.scope-fv-group-oos .scope-fv-item-desc {
+  color: var(--text-muted);
+}
+
+/* Divider between pages */
+.scope-fv-divider {
+  height: 1px;
+  background: var(--border-subtle);
+  margin: 48px 0;
+}
+
+/* ---------- Element Highlight Animation ---------- */
+
+@keyframes scopeHighlightPulse {
+  0%   { box-shadow: 0 0 0 0 rgba(147, 117, 192, 0.6); }
+  50%  { box-shadow: 0 0 0 8px rgba(147, 117, 192, 0.15); }
+  100% { box-shadow: 0 0 0 0 rgba(147, 117, 192, 0); }
+}
+
+.scope-highlight {
+  outline: 2px solid var(--accent) !important;
+  outline-offset: 4px !important;
+  animation: scopeHighlightPulse 1.5s ease-in-out 3;
+  border-radius: var(--radius-sm);
+}
+
+/* ---------- Print ---------- */
+
+@media print {
+  .scope-fab,
+  .scope-panel,
+  .scope-fullview-overlay {
+    display: none !important;
+  }
+}

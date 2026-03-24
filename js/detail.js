@@ -10,9 +10,22 @@ function parseFormattedNumber(str) {
 }
 
 const CATEGORY_LABELS = {
-  scenes: { singular: 'Scene', plural: 'Scenes', short: 'Scenes', icon: '🎬' },
-  characters: { singular: 'Character', plural: 'Characters', short: 'Chars', icon: '👤' },
-  environments: { singular: 'Environment', plural: 'Environments', short: 'Env', icon: '🌍' }
+  scenes: {
+    singular: 'Scene', plural: 'Scenes', short: 'Scenes',
+    svg: '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 11v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"/><path d="M4 11h16"/><path d="M4 7h16"/><path d="M4 7V5a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v2"/><line x1="8" y1="3" x2="10" y2="7"/><line x1="14" y1="3" x2="16" y2="7"/></svg>'
+  },
+  characters: {
+    singular: 'Character', plural: 'Characters', short: 'Chars',
+    svg: '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 21v-1a6 6 0 0 1 6-6h4a6 6 0 0 1 6 6v1"/></svg>'
+  },
+  environments: {
+    singular: 'Environment', plural: 'Environments', short: 'Env',
+    svg: '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 20l5.5-11 4 6 3-4L21 20H3z"/><circle cx="18" cy="6" r="2"/></svg>'
+  },
+  assets: {
+    singular: 'Asset', plural: 'Assets', short: 'Assets',
+    svg: '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l9 5v10l-9 5-9-5V7l9-5z"/><path d="M12 12l9-5"/><path d="M12 12v10"/><path d="M12 12L3 7"/></svg>'
+  }
 };
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -92,6 +105,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const scenesCount = (p.scenes || []).length;
     const charsCount = (p.characters || []).length;
     const envsCount = (p.environments || []).length;
+    const assetsCount = (p.assets || []).length;
 
     return `
       <div class="detail-header">
@@ -124,7 +138,12 @@ document.addEventListener('DOMContentLoaded', () => {
             <span class="detail-header-stat-value">${envsCount}</span>
             <span class="detail-header-stat-label">ENVS</span>
           </div>` : ''}
-          <a href="confirmation.html?id=${p.id}" class="btn btn-secondary btn-sm">FINALIZE</a>
+          ${assetsCount > 0 ? `
+          <div class="detail-header-stat">
+            <span class="detail-header-stat-value">${assetsCount}</span>
+            <span class="detail-header-stat-label">ASSETS</span>
+          </div>` : ''}
+          <a href="confirmation.html?id=${p.id}" class="btn btn-secondary btn-sm" data-scope-id="finalize-btn">FINALIZE</a>
         </div>
       </div>
     `;
@@ -141,8 +160,9 @@ document.addEventListener('DOMContentLoaded', () => {
             const label = CATEGORY_LABELS[cat];
             const count = (p[cat] || []).length;
             return `
-              <button class="sidebar-cat-tab ${cat === activeCategory ? 'active' : ''}" data-category="${cat}">
-                ${label.short} (${count})
+              <button class="sidebar-cat-tab ${cat === activeCategory ? 'active' : ''}" data-category="${cat}" title="${label.plural} (${count})">
+                ${label.svg}
+                <span class="sidebar-cat-count">${count}</span>
               </button>
             `;
           }).join('')}
@@ -204,6 +224,28 @@ document.addEventListener('DOMContentLoaded', () => {
             <div class="scene-card-meta">
               <span class="scene-card-cost">${formatCurrency(item.cost)}</span>
               <span class="scene-card-duration-inline"><span class="env-type-inline-sm ${typeClass}">${item.type}</span> ${item.vfxComplexity}</span>
+            </div>
+          </div>
+        </div>
+      `;
+    }
+
+    if (activeCategory === 'assets') {
+      return `
+        <div class="scene-card ${animClass} ${isActive ? 'active' : ''} ${item.removed ? 'removed' : ''}" data-item-id="${item.id}" style="${animStyle}">
+          <button class="scene-card-remove" data-item-id="${item.id}" title="${item.removed ? 'Restore' : 'Remove'}">
+            ${item.removed
+              ? '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>'
+              : '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>'}
+          </button>
+          <div class="scene-card-thumb asset-card-thumb" style="background: linear-gradient(${gradientAngle}deg, ${colors[0]}44, ${colors[1]}44)">
+            ${item.thumbnail ? `<img class="scene-card-thumb-img" src="${item.thumbnail}" alt="${item.name}">` : ''}
+          </div>
+          <div class="scene-card-info">
+            <span class="scene-card-name">${item.name}</span>
+            <div class="scene-card-meta">
+              <span class="scene-card-cost">${formatCurrency(item.cost)}</span>
+              <span class="scene-card-duration-inline asset-type-badge">${item.type}</span>
             </div>
           </div>
         </div>
@@ -302,6 +344,21 @@ document.addEventListener('DOMContentLoaded', () => {
           <div class="scene-field-value">${item.vfxComplexity}</div>
         </div>
       `;
+    } else if (activeCategory === 'assets') {
+      fieldsHtml = `
+        <div class="scene-field">
+          <span class="scene-field-label">OPPORTUNITIES</span>
+          <div class="scene-field-value">${(item.opportunityList || []).filter(o => o.selected).length} / ${(item.opportunityList || []).length}</div>
+        </div>
+        <div class="scene-field">
+          <span class="scene-field-label">TYPE</span>
+          <div class="scene-field-value"><span class="asset-type-badge">${item.type}</span></div>
+        </div>
+        <div class="scene-field">
+          <span class="scene-field-label">SCENES</span>
+          <div class="scene-field-value">${(item.sceneIds || []).length}</div>
+        </div>
+      `;
     }
 
     const fieldsCount = activeCategory === 'scenes' ? 5 : activeCategory === 'characters' ? 4 : 3;
@@ -330,6 +387,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (activeCategory === 'scenes') return renderScriptViewer(p);
     if (activeCategory === 'characters') return renderCharacterPanel(p);
     if (activeCategory === 'environments') return renderEnvironmentPanel(p);
+    if (activeCategory === 'assets') return renderAssetPanel(p);
     return '';
   }
 
@@ -371,7 +429,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const scriptBody = renderScriptBody(p, [item.id], item.id);
 
     return `
-      <div class="script-viewer">
+      <div class="script-viewer" data-scope-id="script-viewer">
         <div class="script-tabs">
           <button class="script-tab ${activeTab === 'preview' ? 'active' : ''}" data-tab="preview">PREVIEW</button>
           <button class="script-tab ${activeTab === 'script' ? 'active' : ''}" data-tab="script">SCRIPT</button>
@@ -423,7 +481,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const currentSceneId = sceneIds[safeIndex] || null;
 
     return `
-      <div class="script-viewer">
+      <div class="script-viewer" data-scope-id="script-viewer">
         <div class="script-tabs">
           <button class="script-tab ${activeTab === 'details' ? 'active' : ''}" data-tab="details">CHARACTER DETAILS</button>
           <button class="script-tab ${activeTab === 'script' ? 'active' : ''}" data-tab="script">SCRIPT</button>
@@ -477,7 +535,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const currentSceneId = sceneIds[safeIndex] || null;
 
     return `
-      <div class="script-viewer">
+      <div class="script-viewer" data-scope-id="script-viewer">
         <div class="script-tabs">
           <button class="script-tab ${activeTab === 'details' ? 'active' : ''}" data-tab="details">ENVIRONMENT DETAILS</button>
           <button class="script-tab ${activeTab === 'script' ? 'active' : ''}" data-tab="script">SCRIPT</button>
@@ -503,6 +561,51 @@ document.addEventListener('DOMContentLoaded', () => {
               <div class="info-panel-meta-item">
                 <span class="info-panel-meta-label">VFX Complexity</span>
                 <span class="info-panel-meta-value">${item.vfxComplexity}</span>
+              </div>
+            </div>
+          </div>
+          `}
+        </div>
+        ${activeTab === 'script' && sceneIds.length > 0 ? renderScriptNav(safeIndex, sceneIds.length, 'Scene') : ''}
+      </div>
+    `;
+  }
+
+  function renderAssetPanel(p) {
+    const item = getActiveItem(p);
+    if (!item) return '';
+
+    const sceneIds = item.sceneIds || [];
+    const safeIndex = Math.min(scriptSceneIndex, sceneIds.length - 1);
+    const currentSceneId = sceneIds[safeIndex] || null;
+
+    return `
+      <div class="script-viewer" data-scope-id="script-viewer">
+        <div class="script-tabs">
+          <button class="script-tab ${activeTab === 'details' ? 'active' : ''}" data-tab="details">ASSET DETAILS</button>
+          <button class="script-tab ${activeTab === 'script' ? 'active' : ''}" data-tab="script">SCRIPT</button>
+        </div>
+        <div class="script-content">
+          ${activeTab === 'script' ? `
+            <div class="script-text">${renderScriptBody(p, sceneIds, currentSceneId)}</div>
+          ` : `
+          <div class="info-panel">
+            <div class="info-panel-section">
+              <h5 class="info-panel-label">Description</h5>
+              <p class="info-panel-text">${escapeHtml(item.description)}</p>
+            </div>
+            <div class="info-panel-section">
+              <h5 class="info-panel-label">VFX Notes</h5>
+              <p class="info-panel-text">${escapeHtml(item.vfxNotes)}</p>
+            </div>
+            <div class="info-panel-meta">
+              <div class="info-panel-meta-item">
+                <span class="info-panel-meta-label">Type</span>
+                <span class="info-panel-meta-value"><span class="asset-type-badge">${item.type}</span></span>
+              </div>
+              <div class="info-panel-meta-item">
+                <span class="info-panel-meta-label">Used in</span>
+                <span class="info-panel-meta-value">${sceneIds.length} scenes</span>
               </div>
             </div>
           </div>

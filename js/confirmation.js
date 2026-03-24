@@ -133,9 +133,9 @@ document.addEventListener('DOMContentLoaded', () => {
       </div>
 
       <!-- Breakdown Tables -->
-      ${renderCategoryTable(p.scenes, 'Scene', 'Scene')}
-      ${renderCategoryTable(p.characters, 'Character', 'Character')}
-      ${renderCategoryTable(p.environments, 'Environment', 'Environment')}
+      <div data-scope-id="scene-breakdown">${renderCategoryTable(p.scenes, 'Scene', 'Scene')}</div>
+      <div data-scope-id="char-breakdown">${renderCategoryTable(p.characters, 'Character', 'Character')}</div>
+      <div data-scope-id="env-breakdown">${renderCategoryTable(p.environments, 'Environment', 'Environment')}</div>
 
       <!-- Totals -->
       <div class="confirm-table-wrap">

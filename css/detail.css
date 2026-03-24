@@ -964,31 +964,50 @@
 }
 
 /* ==========================================================================
-   Category Tabs (Sidebar)
+   Category Tabs (Sidebar) — Icon-based
    ========================================================================== */
 .sidebar-category-tabs {
   display: flex;
-  gap: 4px;
+  gap: 6px;
   padding: 0 var(--spacing-xs);
   flex-shrink: 0;
 }
 
 .sidebar-cat-tab {
   flex: 1;
-  padding: 8px 4px;
-  font-family: var(--font-heading);
-  font-size: 10px;
-  font-weight: 600;
-  letter-spacing: 1px;
-  text-transform: uppercase;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 34px;
   color: var(--text-muted);
   background: transparent;
   border: 1px solid var(--border-subtle);
   border-radius: var(--radius-sm);
   cursor: pointer;
   transition: all 0.2s ease;
+}
+
+.sidebar-cat-tab svg {
+  width: 16px;
+  height: 16px;
+}
+
+.sidebar-cat-count {
+  position: absolute;
+  top: 2px;
+  right: 3px;
+  min-width: 14px;
+  height: 14px;
+  padding: 0 3px;
+  font-family: var(--font-heading);
+  font-size: 8px;
+  font-weight: 700;
+  line-height: 14px;
   text-align: center;
-  white-space: nowrap;
+  color: var(--text-muted);
+  background: var(--bg-elevated);
+  border-radius: var(--radius-pill);
 }
 
 .sidebar-cat-tab:hover {
@@ -997,10 +1016,38 @@
   background: var(--bg-elevated);
 }
 
+.sidebar-cat-tab:hover .sidebar-cat-count {
+  color: var(--text-secondary);
+  background: var(--bg-card);
+}
+
 .sidebar-cat-tab.active {
   color: var(--accent);
   border-color: var(--accent);
   background: var(--accent-muted);
+}
+
+.sidebar-cat-tab.active .sidebar-cat-count {
+  color: var(--accent);
+  background: rgba(147, 117, 192, 0.2);
+}
+
+/* --- Asset Card Variants --- */
+.asset-card-thumb {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 80px;
+  background: var(--bg-elevated);
+  border-radius: var(--radius-sm) var(--radius-sm) 0 0;
+}
+
+.asset-type-badge {
+  font-size: 9px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: var(--text-muted);
 }
 
 /* ==========================================================================

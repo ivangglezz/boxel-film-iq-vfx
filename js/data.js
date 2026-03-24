@@ -22,7 +22,7 @@ const OPPORTUNITY_CATALOG = [
   "UE Previz"
 ];
 
-const ALL_CATEGORIES = ['scenes', 'characters', 'environments'];
+const ALL_CATEGORIES = ['scenes', 'characters', 'environments', 'assets'];
 
 const SEED_DATA = {
   projects: [
@@ -442,8 +442,71 @@ const SEED_DATA = {
           status: "pending"
         }
       ],
+      assets: [
+        {
+          id: "ms-asset-1",
+          name: "Gonzo's Cannon",
+          type: "Prop",
+          description: "Oversized brass cannon used for Gonzo's daredevil acts. Ornate Victorian-era design with Muppet-style exaggerated proportions and a comically large fuse.",
+          sceneIds: ["ms-scene-2", "ms-scene-6"],
+          vfxNotes: "Full CG model with metal shading and wear. Smoke and explosion FX for launch sequences. Physics-based trajectory for Gonzo.",
+          opportunityList: [
+            { name: "CG Asset", selected: true, amount: 15000 },
+            { name: "FX", selected: true, amount: 10000 },
+            { name: "Animation", selected: true, amount: 8000 }
+          ],
+          cost: 33000,
+          status: "pending"
+        },
+        {
+          id: "ms-asset-2",
+          name: "Electric Mayhem Bus",
+          type: "Vehicle",
+          description: "The iconic psychedelic painted bus belonging to the Electric Mayhem band. Covered in peace signs, flowers, and vibrant rainbow colors.",
+          sceneIds: ["ms-scene-3"],
+          vfxNotes: "Full CG vehicle with detailed paint job and interior. Driving animation with suspension physics. Exhaust smoke and headlight glow effects.",
+          opportunityList: [
+            { name: "CG Asset", selected: true, amount: 22000 },
+            { name: "Animation", selected: true, amount: 12000 },
+            { name: "2D Comp", selected: true, amount: 6000 }
+          ],
+          cost: 40000,
+          status: "pending"
+        },
+        {
+          id: "ms-asset-3",
+          name: "Swedish Chef's Kitchen Set",
+          type: "Prop",
+          description: "Complete kitchen setup with oversized utensils, flying ingredients, and various cooking apparatus. Everything is slightly chaotic and exaggerated.",
+          sceneIds: ["ms-scene-7"],
+          vfxNotes: "Multiple CG props with destruction simulation. Food particle FX for explosions. Utensil physics for thrown objects. Fire and smoke for cooking mishaps.",
+          opportunityList: [
+            { name: "CG Asset", selected: true, amount: 18000 },
+            { name: "FX", selected: true, amount: 14000 },
+            { name: "Animation", selected: false, amount: 0 }
+          ],
+          cost: 32000,
+          status: "pending"
+        },
+        {
+          id: "ms-asset-4",
+          name: "Pigs In Space Ship Console",
+          type: "Prop",
+          description: "Retro-futuristic spaceship command console with blinking lights, oversized buttons, and a dramatic captain's chair. Styled after 1970s sci-fi aesthetics.",
+          sceneIds: ["ms-scene-5"],
+          vfxNotes: "CG console with animated screens and holographic displays. Button glow and light panel effects. Explosion and sparks FX for malfunction sequences.",
+          opportunityList: [
+            { name: "CG Asset", selected: true, amount: 20000 },
+            { name: "FX", selected: true, amount: 8000 },
+            { name: "2D Comp", selected: true, amount: 5000 }
+          ],
+          cost: 33000,
+          status: "pending"
+        }
+      ],
       totalCharacters: 5,
-      totalEnvironments: 5
+      totalEnvironments: 5,
+      totalAssets: 4
     },
     {
       id: "lincoln-lawyer-s4",
