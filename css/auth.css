@@ -1,0 +1,412 @@
+/* ==========================================================================
+   Boxel Studio Quoting Agent — Auth Page Styles
+   ========================================================================== */
+
+/* Page layout */
+.auth-page {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  padding: 40px 20px;
+  gap: 32px;
+}
+
+/* Logo */
+.auth-logo-link {
+  display: block;
+}
+
+.auth-logo {
+  height: 100px;
+  width: auto;
+}
+
+/* Card */
+.auth-card {
+  width: 100%;
+  max-width: 440px;
+  background: var(--bg-card);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+}
+
+.auth-card-gradient {
+  height: 3px;
+  background: var(--gradient-full);
+}
+
+.auth-card-body {
+  padding: 40px 36px;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.auth-card-body-centered {
+  align-items: center;
+  text-align: center;
+}
+
+/* Typography */
+.auth-title {
+  font-family: var(--font-heading);
+  font-size: 18px;
+  font-weight: 600;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: var(--text-primary);
+}
+
+.auth-subtitle {
+  font-family: var(--font-body);
+  font-size: 14px;
+  color: var(--text-secondary);
+  line-height: 1.6;
+  margin-top: -16px;
+}
+
+.auth-hint {
+  font-family: var(--font-body);
+  font-size: 13px;
+  color: var(--text-muted);
+  line-height: 1.5;
+}
+
+.auth-footer {
+  font-family: var(--font-body);
+  font-size: 12px;
+  color: var(--text-muted);
+  text-align: center;
+}
+
+/* Error alert */
+.auth-error {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 14px 20px;
+  background: var(--error-muted);
+  border-left: 3px solid var(--error);
+  border-radius: var(--radius-md);
+  color: var(--error);
+  font-size: 14px;
+  font-family: var(--font-body);
+}
+
+/* Form layout */
+#login-form,
+#forgot-form,
+#reset-form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+/* Password input wrapper */
+.input-password-wrap {
+  position: relative;
+  width: 100%;
+}
+
+.input-password-wrap input {
+  padding-right: 48px;
+}
+
+.password-toggle {
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  color: var(--text-muted);
+  transition: color 0.2s ease;
+  cursor: pointer;
+}
+
+.password-toggle:hover {
+  color: var(--text-secondary);
+}
+
+/* Full-width button */
+.btn-full {
+  width: 100%;
+}
+
+/* Forgot password link */
+.auth-forgot-link {
+  font-family: var(--font-body);
+  font-size: 13px;
+  color: var(--accent);
+  text-align: center;
+  cursor: pointer;
+  transition: color 0.2s ease;
+  background: none;
+  border: none;
+}
+
+.auth-forgot-link:hover {
+  color: var(--accent-hover);
+  text-decoration: underline;
+}
+
+/* Back to sign in link */
+.auth-back-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--font-body);
+  font-size: 13px;
+  color: var(--accent);
+  cursor: pointer;
+  transition: color 0.2s ease;
+  background: none;
+  border: none;
+  align-self: center;
+}
+
+.auth-back-link:hover {
+  color: var(--accent-hover);
+}
+
+/* Icon for check email view */
+.auth-icon {
+  color: var(--accent);
+  margin-bottom: 8px;
+}
+
+/* Password validation feedback */
+.password-feedback {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.password-strength-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.password-strength-label-text {
+  font-family: var(--font-body);
+  font-size: 12px;
+  color: var(--text-secondary);
+}
+
+.password-strength-level {
+  font-family: var(--font-heading);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+}
+
+.password-strength-bar {
+  height: 4px;
+  background: var(--border-default);
+  border-radius: 2px;
+  overflow: hidden;
+}
+
+.password-strength-fill {
+  height: 100%;
+  width: 0%;
+  border-radius: 2px;
+  transition: width 0.3s ease, background 0.3s ease;
+}
+
+.password-strength-fill[data-strength="weak"] {
+  width: 25%;
+  background: var(--error);
+}
+
+.password-strength-fill[data-strength="fair"] {
+  width: 50%;
+  background: var(--warning);
+}
+
+.password-strength-fill[data-strength="medium"] {
+  width: 75%;
+  background: #C8A951;
+}
+
+.password-strength-fill[data-strength="strong"] {
+  width: 100%;
+  background: var(--success);
+}
+
+/* Password rules checklist */
+.password-rules {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.password-rule {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--font-body);
+  font-size: 12px;
+  color: var(--text-muted);
+  transition: color 0.2s ease;
+}
+
+.password-rule.met {
+  color: var(--success);
+}
+
+.password-rule .rule-icon::before {
+  content: '✗';
+}
+
+.password-rule.met .rule-icon::before {
+  content: '✓';
+}
+
+/* Password match indicator */
+.password-match {
+  font-family: var(--font-body);
+  font-size: 12px;
+  margin-top: -4px;
+}
+
+.password-match.match {
+  color: var(--success);
+}
+
+.password-match.no-match {
+  color: var(--error);
+}
+
+/* Error state on inputs */
+input.input-error {
+  border-color: var(--error);
+}
+
+/* Disabled button */
+.btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* Navbar user menu & avatar styles (shared via components) */
+.navbar-right {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.btn-icon-sm {
+  width: 36px;
+  height: 36px;
+}
+
+.user-menu {
+  position: relative;
+}
+
+.user-avatar {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: var(--accent-muted);
+  color: var(--accent);
+  font-family: var(--font-heading);
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 1px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  border: 1px solid var(--border-default);
+  transition: all 0.2s ease;
+}
+
+.user-avatar:hover {
+  border-color: var(--accent);
+  background: rgba(147, 117, 192, 0.3);
+}
+
+.user-dropdown {
+  position: absolute;
+  top: calc(100% + 8px);
+  right: 0;
+  min-width: 200px;
+  background: var(--bg-card);
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-lg);
+  padding: 12px 0;
+  opacity: 0;
+  pointer-events: none;
+  transform: translateY(-4px);
+  transition: all 0.2s ease;
+  z-index: 200;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+}
+
+.user-dropdown.active {
+  opacity: 1;
+  pointer-events: all;
+  transform: translateY(0);
+}
+
+.user-dropdown-info {
+  padding: 8px 20px 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.user-dropdown-name {
+  font-family: var(--font-body);
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--text-primary);
+}
+
+.user-dropdown-role {
+  align-self: flex-start;
+  font-size: 10px;
+}
+
+.user-dropdown-divider {
+  height: 1px;
+  background: var(--border-subtle);
+  margin: 4px 0;
+}
+
+.user-dropdown-item {
+  display: block;
+  width: 100%;
+  padding: 10px 20px;
+  text-align: left;
+  font-family: var(--font-body);
+  font-size: 13px;
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: all 0.15s ease;
+  background: none;
+  border: none;
+}
+
+.user-dropdown-item:hover {
+  background: var(--bg-elevated);
+  color: var(--text-primary);
+}
+
+/* Disabled navbar link */
+.navbar-link.disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+  pointer-events: none;
+}

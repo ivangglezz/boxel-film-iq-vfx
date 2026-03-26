@@ -2,6 +2,7 @@
    Scope Overlay — Requirement Data per Page
    Each page has groups of requirements. The last group per page is "OUT OF SCOPE".
    Items in regular groups = MVP. Items in out-of-scope group = excluded.
+   Rule: 1 FR = 1 item, always. Sequential, no duplicates, no combinations.
    ========================================================================== */
 
 const SCOPE_DATA = {
@@ -16,26 +17,37 @@ const SCOPE_DATA = {
         items: [
           {
             id: 'upload-drag-drop',
+            fr: 'FR1',
             title: 'Drag & Drop Upload',
-            description: 'Users can drag files onto the upload zone or click to browse. The zone shows visual feedback on drag-over.',
+            description: 'Specialist can upload screenplay files via drag & drop or file browser. The upload zone shows visual feedback on drag-over.',
             targetSelector: '#upload-local'
           },
           {
-            id: 'upload-formats',
-            title: 'Supported Formats',
-            description: 'Accept PDF, FDX, TXT, and Fountain screenplay formats.',
-            targetSelector: '#upload-local .upload-zone-subtitle'
-          },
-          {
             id: 'upload-gdrive',
+            fr: 'FR2',
             title: 'Google Drive Import',
-            description: 'Paste a Google Drive folder URL to import scripts from cloud storage.',
+            description: 'Specialist can import screenplays from a Google Drive folder URL.',
             targetSelector: '#upload-gdrive'
           },
           {
+            id: 'upload-formats',
+            fr: 'FR3',
+            title: 'Supported Formats',
+            description: 'System accepts PDF, FDX, TXT, and Fountain screenplay formats.',
+            targetSelector: '#upload-local .upload-zone-subtitle'
+          },
+          {
             id: 'upload-file-list',
-            title: 'File List with Remove',
-            description: 'Uploaded files are shown in a list with individual remove buttons and a clear-all action.',
+            fr: 'FR4',
+            title: 'File List Preview',
+            description: 'Specialist can view a list of uploaded files before processing.',
+            targetSelector: '#file-list'
+          },
+          {
+            id: 'upload-remove-files',
+            fr: 'FR5',
+            title: 'Remove Files',
+            description: 'Specialist can remove individual files or clear all files from the upload list.',
             targetSelector: '#file-list'
           }
         ]
@@ -46,8 +58,9 @@ const SCOPE_DATA = {
         items: [
           {
             id: 'upload-process-btn',
-            title: 'Process Scripts Button',
-            description: 'Button triggers AI analysis of all uploaded scripts and navigates to the processing page.',
+            fr: 'FR6',
+            title: 'Trigger AI Analysis',
+            description: 'Specialist can trigger AI analysis of all uploaded screenplays. Navigates to the processing page.',
             targetSelector: '#process-section'
           }
         ]
@@ -77,43 +90,76 @@ const SCOPE_DATA = {
     title: 'Processing — Scope',
     groups: [
       {
-        id: 'proc-pipeline',
-        title: 'Analysis Pipeline',
+        id: 'proc-detection',
+        title: 'AI Detection',
         items: [
           {
-            id: 'proc-phases',
-            title: '6-Phase Timeline',
-            description: 'Animated timeline showing Script Analysis, Scene Detection, Character Detection, Environment Detection, Opportunity Detection, and Complete.',
+            id: 'proc-scene-detection',
+            fr: 'FR7',
+            title: 'VFX Scene Detection',
+            description: 'System can analyze a screenplay and detect VFX scenes.',
             targetSelector: '.phase-timeline'
           },
           {
-            id: 'proc-terminal',
-            title: 'Real-Time Terminal Log',
-            description: 'Scrolling terminal output showing AI analysis progress messages in real time.',
-            targetSelector: '#terminal'
+            id: 'proc-character-detection',
+            fr: 'FR8',
+            title: 'VFX Character Detection',
+            description: 'System can analyze a screenplay and detect VFX characters.',
+            targetSelector: '.phase-timeline'
           },
           {
-            id: 'proc-progress',
-            title: 'Progress Bar',
-            description: 'Horizontal progress bar with percentage label that updates as analysis advances.',
-            targetSelector: '.processing-progress'
+            id: 'proc-environment-detection',
+            fr: 'FR9',
+            title: 'VFX Environment Detection',
+            description: 'System can analyze a screenplay and detect VFX environments.',
+            targetSelector: '.phase-timeline'
+          },
+          {
+            id: 'proc-asset-detection',
+            fr: 'FR10',
+            title: 'VFX Asset Detection',
+            description: 'System can analyze a screenplay and detect VFX assets (props, vehicles, weapons, etc.).',
+            targetSelector: '.phase-timeline'
+          },
+          {
+            id: 'proc-catalog-mapping',
+            fr: 'FR11',
+            title: 'Service Catalog Mapping',
+            description: 'System can map detected items to services from the studio\'s service catalog for initial pricing.',
+            targetSelector: '.phase-timeline'
           }
         ]
       },
       {
-        id: 'proc-discovery',
-        title: 'Discovered Items',
+        id: 'proc-pipeline',
+        title: 'Analysis Pipeline',
         items: [
           {
+            id: 'proc-progress',
+            fr: 'FR12',
+            title: 'Analysis Progress Display',
+            description: 'System can display analysis progress per phase — animated timeline, real-time terminal log, and progress bar with percentage.',
+            targetSelector: '.processing-progress'
+          },
+          {
             id: 'proc-live-cards',
-            title: 'Live Discovery Cards',
-            description: 'Cards appear in real-time as scenes, characters, and environments are detected. Tabs allow switching between types.',
+            fr: 'FR13',
+            title: 'Real-Time Discovery Cards',
+            description: 'System can display discovered items in real time as each phase completes. Tabs allow switching between scenes, characters, environments, and assets.',
             targetSelector: '.processing-right'
           },
           {
             id: 'proc-summary',
-            title: 'Summary & Navigation',
-            description: 'Summary statistics shown after analysis completes with a link to view generated proposals.',
+            fr: 'FR14',
+            title: 'Analysis Summary',
+            description: 'System can display a summary of all detected items after analysis completes, with a link to view generated proposals.',
+            targetSelector: '#summary'
+          },
+          {
+            id: 'proc-historical-pricing',
+            fr: 'FR15',
+            title: 'Historical Pricing Reference',
+            description: 'System can reference historical quotes to inform pricing suggestions for newly detected items.',
             targetSelector: '#summary'
           }
         ]
@@ -132,6 +178,16 @@ const SCOPE_DATA = {
             id: 'proc-oos-incremental',
             title: 'Incremental / Partial Analysis',
             description: 'Re-analyzing only changed parts of a screenplay instead of the full document.'
+          },
+          {
+            id: 'proc-oos-pm-integration',
+            title: 'External PM Tool Integration',
+            description: 'Integration with external project management tools like ShotGrid or ftrack.'
+          },
+          {
+            id: 'proc-oos-api-integrations',
+            title: 'API Integrations',
+            description: 'API integrations with production tracking and accounting systems. Phase 3 feature.'
           }
         ]
       }
@@ -148,33 +204,65 @@ const SCOPE_DATA = {
         items: [
           {
             id: 'cat-grid',
-            title: 'Grid View',
-            description: 'Responsive grid of proposal cards showing poster image, title, platform, category, and estimated cost.',
+            fr: 'FR16',
+            title: 'Proposal Grid & List Views',
+            description: 'Specialist can view all generated proposals in a responsive grid layout or a table/list layout, toggling between views. Cards show poster image, title, platform, category, status, and estimated cost.',
             targetSelector: '#project-grid'
           },
           {
-            id: 'cat-stats',
-            title: 'Stats Header',
-            description: 'Displays total number of proposals and aggregate portfolio value at the top of the page.',
-            targetSelector: '#catalog-stats'
-          }
-        ]
-      },
-      {
-        id: 'cat-filtering',
-        title: 'Filtering & Sorting',
-        items: [
-          {
             id: 'cat-filters',
-            title: 'Category Filters',
-            description: 'Pill-style filter buttons to show all proposals or filter by category (Animation, Drama, Live Action, etc.).',
+            fr: 'FR17',
+            title: 'Multi-Dimension Filters',
+            description: 'Specialist can filter proposals by status (Draft/Finalized), category (Animation, VFX), and client platform. Pill-style filter buttons for status and category, dropdown for platform.',
             targetSelector: '#catalog-filters'
           },
           {
             id: 'cat-sort',
+            fr: 'FR18',
             title: 'Sort Options',
-            description: 'Dropdown to sort proposals by date, quote amount, or studio name in ascending/descending order.',
+            description: 'Specialist can sort proposals by date, quote amount, or studio name in ascending/descending order.',
             targetSelector: '.sort-control'
+          },
+          {
+            id: 'cat-stats',
+            fr: 'FR19',
+            title: 'Aggregate Stats',
+            description: 'Specialist can view aggregate stats — total proposals, portfolio value, draft count, and finalized count — at the top of the page. Stats update reactively with active filters.',
+            targetSelector: '#catalog-stats'
+          },
+          {
+            id: 'cat-select-proposal',
+            fr: 'FR20',
+            title: 'Proposal Selection',
+            description: 'Specialist can select a proposal to view its full detail. Clicking a card or table row navigates to the detail page.',
+            targetSelector: '#project-grid'
+          }
+        ]
+      },
+      {
+        id: 'cat-dashboard',
+        title: 'Executive Dashboard',
+        items: [
+          {
+            id: 'cat-quote-list',
+            fr: 'FR43',
+            title: 'Quote List',
+            description: 'Manager can view a list of all quotes with status summary, project name, date, and total cost via the table/list view.',
+            targetSelector: '#project-list'
+          },
+          {
+            id: 'cat-insights',
+            fr: 'FR44',
+            title: 'Executive Insights Panel',
+            description: 'Manager can view executive-level summary of quoting activity — total quotes, total value, status distribution, monthly activity, platform breakdown, and top services — in a collapsible insights panel.',
+            targetSelector: '#catalog-insights'
+          },
+          {
+            id: 'cat-view-quote',
+            fr: 'FR45',
+            title: 'View Quote Detail',
+            description: 'Manager can open any quote to view its full detail by clicking a card or table row.',
+            targetSelector: '#project-list'
           }
         ]
       },
@@ -194,9 +282,9 @@ const SCOPE_DATA = {
             description: 'Exporting the full list of proposals as CSV or PDF.'
           },
           {
-            id: 'cat-oos-table-view',
-            title: 'Table View',
-            description: 'Alternative table/list view for proposals instead of the card grid.'
+            id: 'cat-oos-mobile',
+            title: 'Mobile-Optimized Interface',
+            description: 'Responsive mobile-first layout for proposal browsing on phones and tablets.'
           }
         ]
       }
@@ -213,15 +301,10 @@ const SCOPE_DATA = {
         items: [
           {
             id: 'det-sidebar',
-            title: 'Category Sidebar',
-            description: 'Left sidebar with tabs for Scenes, Characters, and Environments. Each card shows thumbnail, name, opportunity count, and cost.',
+            fr: 'FR21',
+            title: 'Category Browsing',
+            description: 'Specialist can browse detected items by category (scenes, characters, environments, assets) in a sidebar. Each card shows thumbnail, name, opportunity count, and cost.',
             targetSelector: '.scene-sidebar'
-          },
-          {
-            id: 'det-header',
-            title: 'Project Header',
-            description: 'Displays project title, platform badge, total cost, and aggregate stats (opportunities, scenes, characters, environments). Includes back link and finalize button.',
-            targetSelector: '.detail-header'
           }
         ]
       },
@@ -231,27 +314,38 @@ const SCOPE_DATA = {
         items: [
           {
             id: 'det-item-detail',
+            fr: 'FR22',
             title: 'Item Detail Preview',
-            description: 'Large preview area with image/video, description, VFX notes, script excerpt, and metadata for the selected item.',
+            description: 'Specialist can view item detail with image/video, description, VFX notes, script excerpt, and metadata for the selected item.',
             targetSelector: '.scene-detail'
           },
           {
             id: 'det-opportunities',
-            title: 'Opportunities List',
-            description: 'Checkboxes for each VFX opportunity with editable cost. Selecting/deselecting updates the running total in real-time.',
+            fr: 'FR23',
+            title: 'Opportunity Selection',
+            description: 'Specialist can select or deselect individual VFX opportunities per item via checkboxes.',
             targetSelector: '.detail-lists'
           },
           {
-            id: 'det-script',
-            title: 'Script Viewer',
-            description: 'Tab showing the original script text with highlighted passages relevant to the selected scene.',
-            targetSelector: '[data-scope-id="script-viewer"]'
+            id: 'det-cost-notes',
+            fr: 'FR24',
+            title: 'Cost Editing & Notes',
+            description: 'Specialist can edit the cost and add notes to individual opportunities.',
+            targetSelector: '.detail-lists'
           },
           {
             id: 'det-cost-calc',
+            fr: 'FR25',
             title: 'Real-Time Cost Calculation',
-            description: 'Cost updates live as opportunities are toggled on/off. Reflected in the header total and sidebar card.',
+            description: 'System can update the running total cost in real time as opportunities are toggled or edited. Reflected in the header and sidebar.',
             targetSelector: '.detail-header-cost'
+          },
+          {
+            id: 'det-script',
+            fr: 'FR26',
+            title: 'Script Viewer',
+            description: 'Specialist can view the original script text with highlighted passages relevant to the selected scene.',
+            targetSelector: '[data-scope-id="script-viewer"]'
           }
         ]
       },
@@ -261,8 +355,9 @@ const SCOPE_DATA = {
         items: [
           {
             id: 'det-finalize',
-            title: 'Finalize Button',
-            description: 'Navigates to the confirmation page with the current approval/decline state for all items.',
+            fr: 'FR27',
+            title: 'Finalize Quote',
+            description: 'Specialist can finalize a quote and proceed to confirmation with the current approval/decline state for all items.',
             targetSelector: '[data-scope-id="finalize-btn"]'
           }
         ]
@@ -302,14 +397,16 @@ const SCOPE_DATA = {
         items: [
           {
             id: 'conf-card',
+            fr: 'FR28',
             title: 'Summary Card',
-            description: 'Top card showing project title, platform, date, total estimated cost, scene/character/environment counts, and services.',
+            description: 'Specialist can view a summary card with project title, platform, date, total estimated cost, item counts by category, and services.',
             targetSelector: '.confirm-summary'
           },
           {
             id: 'conf-totals',
+            fr: 'FR29',
             title: 'Approved / Declined Totals',
-            description: 'Breakdown showing approved total, declined total, and grand total with color-coded values.',
+            description: 'Specialist can view approved and declined totals with a breakdown showing color-coded values and grand total.',
             targetSelector: '.confirm-breakdown'
           }
         ]
@@ -319,22 +416,31 @@ const SCOPE_DATA = {
         title: 'Breakdown Tables',
         items: [
           {
-            id: 'conf-scene-table',
-            title: 'Scene Breakdown Table',
-            description: 'Table with per-scene opportunities, individual costs, and approval status badges.',
+            id: 'conf-breakdown-tables',
+            fr: 'FR30',
+            title: 'Category Breakdown Tables',
+            description: 'Specialist can view per-scene, per-character, per-environment, and per-asset breakdown tables with individual opportunities, costs, and approval status badges.',
             targetSelector: '[data-scope-id="scene-breakdown"]'
+          }
+        ]
+      },
+      {
+        id: 'conf-export',
+        title: 'Export & Persistence',
+        items: [
+          {
+            id: 'conf-pdf-export',
+            fr: 'FR31',
+            title: 'PDF Export',
+            description: 'Specialist can export the finalized quote as a formatted PDF document.',
+            targetSelector: '[data-scope-id="pdf-export-btn"]'
           },
           {
-            id: 'conf-char-table',
-            title: 'Character Breakdown Table',
-            description: 'Same table format for characters with their opportunities and costs.',
-            targetSelector: '[data-scope-id="char-breakdown"]'
-          },
-          {
-            id: 'conf-env-table',
-            title: 'Environment Breakdown Table',
-            description: 'Same table format for environments with their opportunities and costs.',
-            targetSelector: '[data-scope-id="env-breakdown"]'
+            id: 'conf-quote-persist',
+            fr: 'FR32',
+            title: 'Quote Persistence',
+            description: 'System can persist every completed quote for historical reference and future pricing suggestions.',
+            targetSelector: '[data-scope-id="quote-persist"]'
           }
         ]
       },
@@ -357,9 +463,163 @@ const SCOPE_DATA = {
             id: 'conf-oos-versions',
             title: 'Version History',
             description: 'Tracking and comparing different versions/revisions of the same proposal.'
+          },
+          {
+            id: 'conf-oos-client-portal',
+            title: 'Client Portal',
+            description: 'Client portal for direct quote viewing and response. Phase 2 feature.'
           }
         ]
       }
     ]
-  }
+  },
+
+  /* ------------------------------------------------------------------ */
+  'service-catalog': {
+    title: 'Service Catalog — Scope',
+    groups: [
+      {
+        id: 'svc-display',
+        title: 'Service Display',
+        items: [
+          {
+            id: 'svc-view-catalog',
+            fr: 'FR33',
+            title: 'View Service Catalog',
+            description: 'Specialist can view the studio\'s VFX service catalog with all services and pricing.',
+            targetSelector: '[data-scope-id="svc-catalog-list"]'
+          },
+          {
+            id: 'svc-add',
+            fr: 'FR34',
+            title: 'Add Service',
+            description: 'Specialist can add new services to the catalog with name, description, and base pricing.',
+            targetSelector: '[data-scope-id="svc-add-btn"]'
+          },
+          {
+            id: 'svc-edit',
+            fr: 'FR35',
+            title: 'Edit Service',
+            description: 'Specialist can edit existing services including name, description, and pricing.',
+            targetSelector: '[data-scope-id="svc-edit-btn"]'
+          },
+          {
+            id: 'svc-remove',
+            fr: 'FR36',
+            title: 'Remove Service',
+            description: 'Specialist can remove services from the catalog.',
+            targetSelector: '[data-scope-id="svc-remove-btn"]'
+          }
+        ]
+      },
+      {
+        id: 'svc-access',
+        title: 'Access & Organization',
+        items: [
+          {
+            id: 'svc-manager-access',
+            fr: 'FR37',
+            title: 'Manager Catalog Access',
+            description: 'Manager can view, add, edit, and remove services with the same permissions as the specialist.',
+            targetSelector: null
+          },
+          {
+            id: 'svc-group-management',
+            fr: 'FR38',
+            title: 'Service Group Management',
+            description: 'Specialist can create, edit, and remove service groups for categorizing services (e.g., Animation, Compositing, FX).',
+            targetSelector: '[data-scope-id="svc-groups"]'
+          },
+          {
+            id: 'svc-assign-group',
+            fr: 'FR39',
+            title: 'Assign Service to Group',
+            description: 'Specialist can assign or reassign a service to a service group for categorization.',
+            targetSelector: '[data-scope-id="svc-assign-group"]'
+          }
+        ]
+      },
+      {
+        id: 'svc-out-of-scope',
+        title: 'Out of Scope',
+        isOutOfScope: true,
+        items: [
+          {
+            id: 'svc-oos-versioning',
+            title: 'Service Pricing Version History',
+            description: 'Tracking historical changes to service pricing over time.'
+          },
+          {
+            id: 'svc-oos-import',
+            title: 'Bulk Import/Export of Services',
+            description: 'Importing or exporting the service catalog as CSV or other formats.'
+          }
+        ]
+      }
+    ]
+  },
+
+  /* ------------------------------------------------------------------ */
+  auth: {
+    title: 'Authentication — Scope',
+    groups: [
+      {
+        id: 'auth-login',
+        title: 'Authentication',
+        items: [
+          {
+            id: 'auth-login-form',
+            fr: 'FR40',
+            title: 'User Authentication',
+            description: 'Users can authenticate with role-based access (specialist or manager).',
+            targetSelector: '[data-scope-id="auth-login-form"]'
+          },
+          {
+            id: 'auth-restricted',
+            fr: 'FR41',
+            title: 'Restricted Access',
+            description: 'System can restrict access to authenticated users only. Unauthenticated users are redirected to login.',
+            targetSelector: null
+          },
+          {
+            id: 'auth-role-access',
+            fr: 'FR42',
+            title: 'Role-Based Permissions',
+            description: 'System can enforce role-based permissions across the application at both UI and API levels.',
+            targetSelector: null
+          }
+        ]
+      },
+      {
+        id: 'auth-out-of-scope',
+        title: 'Out of Scope',
+        isOutOfScope: true,
+        items: [
+          {
+            id: 'auth-oos-sso',
+            title: 'SSO / OAuth Integration',
+            description: 'Single sign-on via Google, Microsoft, or other identity providers.'
+          },
+          {
+            id: 'auth-oos-mfa',
+            title: 'Multi-Factor Authentication',
+            description: 'Two-factor or multi-factor authentication beyond username/password.'
+          },
+          {
+            id: 'auth-oos-self-register',
+            title: 'Self-Registration',
+            description: 'Users creating their own accounts. MVP users are provisioned by an admin.'
+          },
+          {
+            id: 'auth-oos-multi-tenant',
+            title: 'Multi-Studio / Multi-Tenant',
+            description: 'Multi-studio SaaS with isolated data per tenant. Phase 3 feature.'
+          }
+        ]
+      }
+    ]
+  },
+
+  /* Manager Dashboard — ABSORBED into catalog (Proposals) page.
+     FR43-FR45 now live under catalog > cat-dashboard group. */
 };

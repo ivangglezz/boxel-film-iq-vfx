@@ -4,6 +4,7 @@
 
 document.addEventListener('DOMContentLoaded', () => {
   Store.init();
+  if (!requireAuth()) return;
 
   document.getElementById('app-navbar').innerHTML = renderNavbar('proposals');
 

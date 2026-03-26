@@ -30,6 +30,7 @@ const CATEGORY_LABELS = {
 
 document.addEventListener('DOMContentLoaded', () => {
   Store.init();
+  if (!requireAuth()) return;
 
   const params = new URLSearchParams(window.location.search);
   const projectId = params.get('id');

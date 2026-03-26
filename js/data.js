@@ -39,6 +39,8 @@ const SEED_DATA = {
       totalCost: 485000,
       totalOpportunities: 7,
       totalScenes: 8,
+      validated: true,
+      validatedAt: "2026-03-15T14:30:00.000Z",
       scenes: [
         {
           id: "ms-scene-1",
@@ -521,6 +523,7 @@ const SEED_DATA = {
       totalCost: 320000,
       totalOpportunities: 6,
       totalScenes: 6,
+      validated: false,
       scenes: [
         {
           id: "ll-scene-1",
@@ -675,6 +678,8 @@ const SEED_DATA = {
       totalCost: 275000,
       totalOpportunities: 7,
       totalScenes: 7,
+      validated: true,
+      validatedAt: "2026-03-20T10:15:00.000Z",
       scenes: [
         {
           id: "kc-scene-1",
@@ -852,6 +857,7 @@ const SEED_DATA = {
       totalCost: 520000,
       totalOpportunities: 7,
       totalScenes: 6,
+      validated: false,
       scenes: [
         {
           id: "g20-scene-1",
@@ -1006,6 +1012,7 @@ const SEED_DATA = {
       totalCost: 185000,
       totalOpportunities: 5,
       totalScenes: 5,
+      validated: false,
       scenes: [
         {
           id: "mq-scene-1",
@@ -1137,6 +1144,7 @@ const SEED_DATA = {
       totalCost: 410000,
       totalOpportunities: 7,
       totalScenes: 6,
+      validated: false,
       scenes: [
         {
           id: "hp-scene-1",
@@ -1291,6 +1299,8 @@ const SEED_DATA = {
       totalCost: 720000,
       totalOpportunities: 7,
       totalScenes: 7,
+      validated: true,
+      validatedAt: "2026-03-22T16:45:00.000Z",
       scenes: [
         {
           id: "st-scene-1",
@@ -1468,6 +1478,7 @@ const SEED_DATA = {
       totalCost: 550000,
       totalOpportunities: 7,
       totalScenes: 6,
+      validated: false,
       scenes: [
         {
           id: "ah-scene-1",
@@ -1610,5 +1621,71 @@ const SEED_DATA = {
       ]
     }
   ],
-  uploadedFiles: []
+  uploadedFiles: [],
+
+  /* ================================================================
+     Users (MVP mock — passwords stored as plaintext for prototype)
+     ================================================================ */
+  users: [
+    {
+      id: 'user-carlos',
+      name: 'Carlos García',
+      email: 'carlos@boxelstudio.com',
+      username: 'carlos',
+      password: 'Boxel2026!',
+      role: 'specialist'
+    },
+    {
+      id: 'user-diana',
+      name: 'Diana Martínez',
+      email: 'diana@boxelstudio.com',
+      username: 'diana',
+      password: 'Boxel2026!',
+      role: 'manager'
+    }
+  ],
+
+  /* ================================================================
+     Service Catalog — Groups & Services
+     ================================================================ */
+  serviceGroups: [
+    { id: 'grp-animation', name: 'Animation' },
+    { id: 'grp-compositing', name: 'Compositing' },
+    { id: 'grp-fx', name: 'FX / Simulations' },
+    { id: 'grp-environments', name: 'Environment / Matte Painting' },
+    { id: 'grp-assets', name: 'CG Assets' }
+  ],
+
+  services: [
+    // Animation
+    { id: 'svc-char-anim', name: '3D Character Animation', description: 'Full character rigging and keyframe/mocap animation for CG characters in live-action plates.', price: 12500, groupId: 'grp-animation' },
+    { id: 'svc-facial-anim', name: 'Facial Animation / Performance Capture', description: 'Detailed facial rig animation driven by performance capture data for realistic CG characters.', price: 8000, groupId: 'grp-animation' },
+    { id: 'svc-creature-anim', name: 'Creature Animation', description: 'Animation for non-humanoid creatures, animals, or fantasy beings with custom rigs.', price: 15000, groupId: 'grp-animation' },
+    { id: 'svc-previz', name: 'Previs / Layout', description: 'Pre-visualization and 3D layout for planning VFX-heavy sequences before principal photography.', price: 6000, groupId: 'grp-animation' },
+
+    // Compositing
+    { id: 'svc-keying', name: 'Green Screen Keying', description: 'Professional chroma key extraction and edge blending for clean composites.', price: 3500, groupId: 'grp-compositing' },
+    { id: 'svc-multilayer', name: 'Multi-Layer Compositing', description: 'Layered compositing of CG elements, live-action plates, and matte paintings into final shots.', price: 6000, groupId: 'grp-compositing' },
+    { id: 'svc-cleanup', name: 'Paint & Cleanup', description: 'Wire removal, rig removal, and set extension cleanup for clean final frames.', price: 2500, groupId: 'grp-compositing' },
+    { id: 'svc-color', name: 'Color Grading & LUT', description: 'Shot-level color grading and LUT application to match VFX elements with live-action footage.', price: 2000, groupId: 'grp-compositing' },
+
+    // FX / Simulations
+    { id: 'svc-fire', name: 'Fire / Explosion FX', description: 'Realistic fire, explosion, and pyrotechnic simulations with interactive lighting.', price: 10000, groupId: 'grp-fx' },
+    { id: 'svc-water', name: 'Water / Fluid Simulation', description: 'Ocean, river, rain, and fluid dynamics simulations at various scales.', price: 12000, groupId: 'grp-fx' },
+    { id: 'svc-cloth', name: 'Cloth & Hair Simulation', description: 'Dynamic cloth, hair, and fur simulations for characters and environments.', price: 7000, groupId: 'grp-fx' },
+
+    // Environment / Matte Painting
+    { id: 'svc-env-ext', name: 'CG Environment Extension', description: 'Extending practical sets with full CG environments for establishing and wide shots.', price: 18000, groupId: 'grp-environments' },
+    { id: 'svc-matte', name: 'Digital Matte Painting', description: 'Photorealistic 2.5D matte paintings for backgrounds, sky replacements, and set extensions.', price: 8000, groupId: 'grp-environments' },
+    { id: 'svc-sky', name: 'Sky Replacement', description: 'Automated and manual sky replacement with proper light matching and edge refinement.', price: 3000, groupId: 'grp-environments' },
+
+    // CG Assets
+    { id: 'svc-modeling', name: 'CG Modeling', description: 'High-poly and low-poly modeling of props, vehicles, weapons, and set pieces.', price: 5000, groupId: 'grp-assets' },
+    { id: 'svc-texturing', name: 'Texturing & Shading', description: 'PBR texturing and shader development for CG assets to match on-set photography.', price: 4000, groupId: 'grp-assets' },
+    { id: 'svc-digi-double', name: 'Digital Double', description: 'Full CG replica of an actor for stunt replacement, crowd replication, or de-aging.', price: 25000, groupId: 'grp-assets' },
+
+    // Uncategorized
+    { id: 'svc-onset', name: 'On-Set Supervision', description: 'VFX supervisor presence during principal photography for data acquisition and creative guidance.', price: 5000, groupId: null },
+    { id: 'svc-roto', name: 'Rotoscoping', description: 'Frame-by-frame masking and rotoscoping for complex element isolation.', price: 3000, groupId: null }
+  ]
 };

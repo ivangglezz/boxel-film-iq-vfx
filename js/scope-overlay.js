@@ -20,7 +20,10 @@ const ScopeOverlay = (() => {
       'processing.html': 'processing',
       'catalog.html': 'catalog',
       'detail.html': 'detail',
-      'confirmation.html': 'confirmation'
+      'confirmation.html': 'confirmation',
+      'service-catalog.html': 'service-catalog',
+      'auth.html': 'auth',
+      'manager-dashboard.html': 'manager-dashboard'
     };
     return map[filename] || 'upload';
   }
@@ -105,11 +108,12 @@ const ScopeOverlay = (() => {
 
   function renderItem(item, isOutOfScope) {
     const clickAttr = !isOutOfScope && item.targetSelector
-      ? `data-target="${item.targetSelector}" data-item-id="${item.id}"`
+      ? `data-target='${item.targetSelector}' data-item-id="${item.id}"`
       : '';
+    const frBadge = item.fr ? `<span class="scope-fr-badge">${item.fr}</span>` : '';
     return `
       <div class="scope-item" ${clickAttr}>
-        <div class="scope-item-title">${item.title}</div>
+        <div class="scope-item-title">${frBadge}${item.title}</div>
         <p class="scope-item-desc">${item.description}</p>
       </div>
     `;
@@ -156,7 +160,15 @@ const ScopeOverlay = (() => {
     // Clear existing highlight
     clearHighlight();
 
-    const target = document.querySelector(selector);
+    if (!selector) return;
+
+    let target;
+    try {
+      target = document.querySelector(selector);
+    } catch (e) {
+      console.warn('Invalid scope selector:', selector);
+      return;
+    }
     if (!target) {
       if (typeof showToast === 'function') {
         showToast('Element not visible yet on this page', 'info');
@@ -239,12 +251,15 @@ const ScopeOverlay = (() => {
 
       const groupsHTML = pageData.groups.map(group => {
         const oosClass = group.isOutOfScope ? ' scope-fv-group-oos' : '';
-        const itemsHTML = group.items.map(item => `
+        const itemsHTML = group.items.map(item => {
+          const frBadge = item.fr ? `<span class="scope-fr-badge">${item.fr}</span>` : '';
+          return `
           <div class="scope-fv-item">
-            <div class="scope-fv-item-title">${item.title}</div>
+            <div class="scope-fv-item-title">${frBadge}${item.title}</div>
             <p class="scope-fv-item-desc">${item.description}</p>
           </div>
-        `).join('');
+        `;
+        }).join('');
 
         return `
           <div class="scope-fv-group${oosClass}">

@@ -4,6 +4,7 @@
 
 document.addEventListener('DOMContentLoaded', () => {
   Store.init();
+  if (!requireAuth()) return;
 
   // Render navbar
   document.getElementById('app-navbar').innerHTML = renderNavbar('upload');

@@ -7,6 +7,7 @@
   <link rel="stylesheet" href="css/variables.css">
   <link rel="stylesheet" href="css/base.css">
   <link rel="stylesheet" href="css/components.css">
+  <link rel="stylesheet" href="css/auth.css">
   <link rel="stylesheet" href="css/catalog.css">
   <link rel="stylesheet" href="css/scope-overlay.css">
 </head>
@@ -20,13 +21,24 @@
           <h1>Proposals</h1>
           <p>AI-generated production estimates from uploaded scripts</p>
         </div>
-        <div id="catalog-stats" class="catalog-stats"></div>
+        <div class="catalog-header-right">
+          <div id="catalog-stats" class="catalog-stats"></div>
+          <button id="insights-toggle" class="btn-insights-toggle" title="Toggle insights panel">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/>
+            </svg>
+            <span>INSIGHTS</span>
+          </button>
+        </div>
       </div>
     </div>
+
+    <div id="catalog-insights" class="catalog-insights collapsed"></div>
 
     <div id="catalog-filters" class="catalog-filters"></div>
 
     <div id="project-grid" class="project-grid"></div>
+    <div id="project-list" class="project-list" style="display:none"></div>
   </div>
 
   <script src="js/data.js"></script>
