@@ -1,6 +1,6 @@
 /* ==========================================================================
    Proposals Catalog Page — Logic
-   Enhanced with Insights Panel, Status/Platform filters, List view
+   Enhanced with Insights Sidebar, Status/Platform filters, Grid + List views
    ========================================================================== */
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -33,15 +33,21 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   /* --- Initial render --- */
-  renderAll();
   renderInsights();
-  applyInsightsState();
+  renderAll();
 
   /* --- Insights toggle --- */
   document.getElementById('insights-toggle').addEventListener('click', () => {
     insightsOpen = !insightsOpen;
     localStorage.setItem(PREF_INSIGHTS, insightsOpen);
+    const filtered = getFilteredProjects();
+    const sorted = applySort(filtered);
     applyInsightsState();
+    renderListContent(sorted);
+    applyViewState();
+    // Update view toggle visibility
+    const viewToggle = document.getElementById('view-toggle-wrap');
+    if (viewToggle) viewToggle.style.display = insightsOpen ? 'none' : '';
   });
 
   /* =======================================================================
@@ -74,7 +80,8 @@ document.addEventListener('DOMContentLoaded', () => {
     renderFilters();
     const sorted = applySort(filtered);
     renderGrid(sorted);
-    renderList(sorted);
+    renderListContent(sorted);
+    applyInsightsState();
     applyViewState();
   }
 
@@ -148,7 +155,7 @@ document.addEventListener('DOMContentLoaded', () => {
               <option value="studio-za" ${activeSort === 'studio-za' ? 'selected' : ''}>Studio Z → A</option>
             </select>
           </div>
-          <div class="view-toggle">
+          <div class="view-toggle" id="view-toggle-wrap" ${insightsOpen ? 'style="display:none"' : ''}>
             <button class="view-toggle-btn ${activeView === 'grid' ? 'active' : ''}" data-view="grid" title="Grid view">
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                 <rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/>
@@ -189,7 +196,7 @@ document.addEventListener('DOMContentLoaded', () => {
       const filtered = getFilteredProjects();
       const sorted = applySort(filtered);
       renderGrid(sorted);
-      renderList(sorted);
+      renderListContent(sorted);
     });
 
     document.querySelectorAll('[data-view]').forEach(btn => {
@@ -204,48 +211,45 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   /* =======================================================================
-     View State
+     View State — handles grid/list toggle + insights split
      ======================================================================= */
 
   function applyViewState() {
     const grid = document.getElementById('project-grid');
     const list = document.getElementById('project-list');
-    grid.style.display = activeView === 'grid' ? '' : 'none';
-    list.style.display = activeView === 'list' ? '' : 'none';
+
+    if (insightsOpen) {
+      // Insights ON: always show compact list, hide grid
+      grid.style.display = 'none';
+      list.style.display = '';
+    } else {
+      // Insights OFF: respect activeView toggle
+      grid.style.display = activeView === 'grid' ? '' : 'none';
+      list.style.display = activeView === 'list' ? '' : 'none';
+    }
   }
 
   /* =======================================================================
-     Insights Panel
+     Insights Sidebar State
      ======================================================================= */
 
   function applyInsightsState() {
-    const panel = document.getElementById('catalog-insights');
+    const content = document.getElementById('catalog-content');
     const toggleBtn = document.getElementById('insights-toggle');
     if (insightsOpen) {
-      panel.classList.remove('collapsed');
+      content.classList.add('insights-open');
       toggleBtn.classList.add('active');
     } else {
-      panel.classList.add('collapsed');
+      content.classList.remove('insights-open');
       toggleBtn.classList.remove('active');
     }
   }
 
+  /* =======================================================================
+     Insights Sidebar Content (portfolio-wide, unfiltered)
+     ======================================================================= */
+
   function renderInsights() {
-    const total = projects.length;
-    const totalValue = projects.reduce((sum, p) => sum + p.totalCost, 0);
-    const drafts = projects.filter(p => !p.validated).length;
-    const finalized = projects.filter(p => p.validated).length;
-
-    const now = new Date();
-    const thisMonth = now.getFullYear() + '-' + String(now.getMonth() + 1).padStart(2, '0');
-    const lastDate = new Date(now.getFullYear(), now.getMonth() - 1, 1);
-    const lastMonth = lastDate.getFullYear() + '-' + String(lastDate.getMonth() + 1).padStart(2, '0');
-
-    const thisMonthProjects = projects.filter(p => p.dateAdded && p.dateAdded.startsWith(thisMonth));
-    const lastMonthProjects = projects.filter(p => p.dateAdded && p.dateAdded.startsWith(lastMonth));
-    const thisMonthValue = thisMonthProjects.reduce((s, p) => s + p.totalCost, 0);
-    const lastMonthValue = lastMonthProjects.reduce((s, p) => s + p.totalCost, 0);
-
     /* Platform breakdown */
     const platformMap = {};
     projects.forEach(p => {
@@ -281,49 +285,19 @@ document.addEventListener('DOMContentLoaded', () => {
       `).join('');
 
     document.getElementById('catalog-insights').innerHTML = `
-      <div class="insights-inner">
-        <div class="insights-grid">
-          <div class="insights-stat-card">
-            <div class="insights-stat-value">${total}</div>
-            <div class="insights-stat-label">TOTAL QUOTES</div>
-          </div>
-          <div class="insights-stat-card">
-            <div class="insights-stat-value">${formatCurrency(totalValue)}</div>
-            <div class="insights-stat-label">PORTFOLIO VALUE</div>
-          </div>
-          <div class="insights-stat-card insights-stat-draft">
-            <div class="insights-stat-value">${drafts}</div>
-            <div class="insights-stat-label">DRAFTS</div>
-          </div>
-          <div class="insights-stat-card insights-stat-finalized">
-            <div class="insights-stat-value">${finalized}</div>
-            <div class="insights-stat-label">FINALIZED</div>
-          </div>
-          <div class="insights-stat-card">
-            <div class="insights-stat-value">${thisMonthProjects.length} <span class="insights-stat-sub">${formatCurrency(thisMonthValue)}</span></div>
-            <div class="insights-stat-label">THIS MONTH</div>
-          </div>
-          <div class="insights-stat-card">
-            <div class="insights-stat-value">${lastMonthProjects.length} <span class="insights-stat-sub">${formatCurrency(lastMonthValue)}</span></div>
-            <div class="insights-stat-label">LAST MONTH</div>
-          </div>
-        </div>
-        <div class="insights-tables">
-          <div class="insights-table-section">
-            <h4 class="insights-table-title">BY PLATFORM</h4>
-            <table class="insights-table">
-              <thead><tr><th>Platform</th><th class="text-right">Quotes</th><th class="text-right">Value</th></tr></thead>
-              <tbody>${platformRows}</tbody>
-            </table>
-          </div>
-          <div class="insights-table-section">
-            <h4 class="insights-table-title">TOP SERVICES</h4>
-            <table class="insights-table">
-              <thead><tr><th>Service</th><th class="text-right">Used</th></tr></thead>
-              <tbody>${topServices}</tbody>
-            </table>
-          </div>
-        </div>
+      <div class="insights-table-section">
+        <h4 class="insights-table-title">BY PLATFORM</h4>
+        <table class="insights-table">
+          <thead><tr><th>Platform</th><th class="text-right">Quotes</th><th class="text-right">Value</th></tr></thead>
+          <tbody>${platformRows}</tbody>
+        </table>
+      </div>
+      <div class="insights-table-section">
+        <h4 class="insights-table-title">TOP SERVICES</h4>
+        <table class="insights-table">
+          <thead><tr><th>Service</th><th class="text-right">Used</th></tr></thead>
+          <tbody>${topServices}</tbody>
+        </table>
       </div>
     `;
   }
@@ -402,10 +376,10 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   /* =======================================================================
-     List / Table View
+     List / Table View — renders compact (4 cols) or full (8 cols)
      ======================================================================= */
 
-  function renderList(filteredProjects) {
+  function renderListContent(filteredProjects) {
     const container = document.getElementById('project-list');
 
     if (filteredProjects.length === 0) {
@@ -421,12 +395,31 @@ document.addEventListener('DOMContentLoaded', () => {
       return;
     }
 
+    const compact = insightsOpen;
+
     const rows = filteredProjects.map((project, index) => {
       const initials = project.title.split(' ').map(w => w[0]).join('').substring(0, 2);
       const gradientStyle = `background: linear-gradient(${project.gradientAngle}deg, ${project.gradientColors.join(', ')})`;
       const status = getProjectStatus(project);
       const badgeClass = status === 'FINALIZED' ? 'badge-finalized' : 'badge-draft';
       const staggerDelay = Math.min(index * 0.03, 0.3);
+
+      if (compact) {
+        return `
+          <tr class="list-row card-animate" style="animation-delay:${staggerDelay}s" onclick="window.location.href='detail.html?id=${project.id}'">
+            <td class="list-cell-project">
+              <div class="list-project-thumb" style="${gradientStyle}">
+                ${project.thumbnail ? `<img src="${project.thumbnail}" alt="" onerror="this.style.display='none'">` : ''}
+                <span class="list-thumb-initials">${initials}</span>
+              </div>
+              <span class="list-project-title">${project.title}</span>
+            </td>
+            <td>${project.platform}</td>
+            <td><span class="list-badge ${badgeClass}">${status}</span></td>
+            <td class="text-right">${formatCurrency(project.totalCost)}</td>
+          </tr>
+        `;
+      }
 
       return `
         <tr class="list-row card-animate" style="animation-delay:${staggerDelay}s" onclick="window.location.href='detail.html?id=${project.id}'">
@@ -448,20 +441,13 @@ document.addEventListener('DOMContentLoaded', () => {
       `;
     }).join('');
 
+    const headers = compact
+      ? '<th>Project</th><th>Platform</th><th>Status</th><th class="text-right">Quote</th>'
+      : '<th>Project</th><th>Platform</th><th>Category</th><th>Status</th><th class="text-right">Scenes</th><th class="text-right">Opps</th><th class="text-right">Quote</th><th>Date</th>';
+
     container.innerHTML = `
       <table class="list-table">
-        <thead>
-          <tr>
-            <th>Project</th>
-            <th>Platform</th>
-            <th>Category</th>
-            <th>Status</th>
-            <th class="text-right">Scenes</th>
-            <th class="text-right">Opps</th>
-            <th class="text-right">Quote</th>
-            <th>Date</th>
-          </tr>
-        </thead>
+        <thead><tr>${headers}</tr></thead>
         <tbody>${rows}</tbody>
       </table>
     `;

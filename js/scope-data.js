@@ -253,8 +253,8 @@ const SCOPE_DATA = {
           {
             id: 'cat-insights',
             fr: 'FR44',
-            title: 'Executive Insights Panel',
-            description: 'Manager can view executive-level summary of quoting activity — total quotes, total value, status distribution, monthly activity, platform breakdown, and top services — in a collapsible insights panel.',
+            title: 'Executive Insights Sidebar',
+            description: 'Manager can view executive-level summary of quoting activity — platform breakdown and top services — in an insights sidebar that splits the view alongside a compact quote list.',
             targetSelector: '#catalog-insights'
           },
           {

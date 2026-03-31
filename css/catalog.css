@@ -98,81 +98,48 @@
 }
 
 /* ==========================================================================
-   Insights Panel (Collapsible)
+   Content Area — Split Layout Container
+   ========================================================================== */
+
+.catalog-content {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 0;
+  max-width: 1600px;
+  margin: var(--spacing-xl) auto 0;
+  padding: 0 40px;
+  transition: grid-template-columns 0.3s ease;
+}
+
+.catalog-content.insights-open {
+  grid-template-columns: 1fr 340px;
+  gap: var(--spacing-xl);
+}
+
+.catalog-main {
+  min-width: 0;
+}
+
+/* ==========================================================================
+   Insights Sidebar
    ========================================================================== */
 
 .catalog-insights {
-  max-width: 1600px;
-  margin: 0 auto;
-  padding: 0 40px;
-  overflow: hidden;
-  max-height: 400px;
-  transition: max-height 0.4s ease, opacity 0.3s ease;
-  opacity: 1;
+  display: none;
 }
 
-.catalog-insights.collapsed {
-  max-height: 0;
-  opacity: 0;
-}
-
-.insights-inner {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
+.insights-open .catalog-insights {
+  display: flex;
+  flex-direction: column;
   gap: var(--spacing-xl);
-  padding: var(--spacing-lg) 0;
-  border-bottom: 1px solid var(--border-subtle);
-}
-
-.insights-grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: var(--spacing-md);
-}
-
-.insights-stat-card {
-  background: var(--bg-card);
-  border: 1px solid var(--border-subtle);
-  border-radius: var(--radius-md);
-  padding: var(--spacing-md) var(--spacing-lg);
-}
-
-.insights-stat-value {
-  font-family: var(--font-heading);
-  font-size: 22px;
-  font-weight: 700;
-  color: var(--text-primary);
-}
-
-.insights-stat-sub {
-  font-size: 13px;
-  font-weight: 500;
-  color: var(--text-secondary);
-}
-
-.insights-stat-label {
-  font-family: var(--font-heading);
-  font-size: 9px;
-  font-weight: 600;
-  letter-spacing: 2px;
-  text-transform: uppercase;
-  color: var(--text-muted);
-  margin-top: 4px;
-}
-
-.insights-stat-draft .insights-stat-value {
-  color: var(--warning);
-}
-
-.insights-stat-finalized .insights-stat-value {
-  color: var(--success);
+  border-left: 1px solid var(--border-subtle);
+  padding-left: var(--spacing-xl);
+  padding-top: var(--spacing-sm);
 }
 
 /* Insights Tables */
-.insights-tables {
-  display: flex;
-  flex-direction: column;
-  gap: var(--spacing-lg);
+.insights-table-section {
+  /* spacing handled by parent gap */
 }
 
 .insights-table-title {
@@ -357,9 +324,6 @@
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   gap: var(--spacing-lg);
-  max-width: 1600px;
-  margin: var(--spacing-xl) auto 0;
-  padding: 0 40px;
 }
 
 /* New indicator */
@@ -562,12 +526,6 @@
    List / Table View
    ========================================================================== */
 
-.project-list {
-  max-width: 1600px;
-  margin: var(--spacing-xl) auto 0;
-  padding: 0 40px;
-}
-
 .list-table {
   width: 100%;
   border-collapse: collapse;
@@ -679,12 +637,21 @@
     grid-template-columns: repeat(3, 1fr);
   }
 
-  .insights-inner {
+  .catalog-content.insights-open {
     grid-template-columns: 1fr;
   }
 
-  .insights-grid {
-    grid-template-columns: repeat(3, 1fr);
+  .insights-open .catalog-insights {
+    border-left: none;
+    padding-left: 0;
+    border-top: 1px solid var(--border-subtle);
+    padding-top: var(--spacing-lg);
+    flex-direction: row;
+    gap: var(--spacing-xl);
+  }
+
+  .insights-open .catalog-insights .insights-table-section {
+    flex: 1;
   }
 }
 
@@ -700,10 +667,6 @@
 
   .filter-controls {
     flex-wrap: wrap;
-  }
-
-  .insights-grid {
-    grid-template-columns: repeat(2, 1fr);
   }
 
   .catalog-header-top {
@@ -724,14 +687,14 @@
   .catalog-stat-value {
     font-size: 18px;
   }
+
+  .insights-open .catalog-insights {
+    flex-direction: column;
+  }
 }
 
 @media (max-width: 600px) {
   .project-grid {
     grid-template-columns: 1fr;
-  }
-
-  .insights-grid {
-    grid-template-columns: 1fr 1fr;
   }
 }
